@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>ウォーターサーバー操作パネル デモ</title>
+    <style>
+      :root {
+        --lcd-green: #00ff66;
+        --lcd-dim: rgba(0, 255, 102, 0.3);
+        --lock-red: #ff3b30;
+        --eco-green: #31d158;
+        --panel-max: 900px;
+        --spout-max: 520px;
+        --stream-width: 34px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        background: #0f1115;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+      }
+
+      .page {
+        width: 100%;
+        max-width: 1200px;
+        padding: 24px 16px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        align-items: center;
+      }
+
+      .panel,
+      .spout {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      .panel-wrap {
+        width: min(100%, var(--panel-max));
+      }
+
+      .panel-surface {
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 18px 30px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: grid;
+        gap: 18px;
+        color: #1b1f27;
+      }
+
+      .panel-top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .panel-title {
+        font-size: 14px;
+        letter-spacing: 0.08em;
+        color: #6a6a6a;
+        text-transform: uppercase;
+      }
+
+      .lcd {
+        padding: 6px 14px;
+        border-radius: 6px;
+        background: #0f1115;
+        font-family: "Courier New", monospace;
+        font-size: clamp(18px, 2.6vw, 30px);
+        letter-spacing: 0.06em;
+        color: var(--lcd-green);
+        text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        user-select: none;
+        min-width: 130px;
+        justify-content: center;
+      }
+
+      .lcd.off {
+        color: transparent;
+        text-shadow: none;
+      }
+
+      .lcd.dim {
+        color: var(--lcd-dim);
+        text-shadow: none;
+      }
+
+      .lcd-value.blink,
+      .lcd-unit.blink {
+        animation: blink 1s step-end infinite;
+      }
+
+      .lcd-unit {
+        font-size: 0.7em;
+      }
+
+      .lcd-unit.hidden {
+        display: none;
+      }
+
+      .lamp-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .lamp-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #404040;
+      }
+
+      .lamp {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        opacity: 0.2;
+        box-shadow: none;
+        transition: all 0.2s ease;
+      }
+
+      .lamp.on.lock {
+        opacity: 1;
+        background: var(--lock-red);
+        box-shadow: 0 0 12px rgba(255, 59, 48, 0.8);
+      }
+
+      .lamp.on.eco {
+        opacity: 1;
+        background: var(--eco-green);
+        box-shadow: 0 0 12px rgba(49, 209, 88, 0.8);
+      }
+
+      .btn {
+        background: #f0f1f4;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        color: #1b1f27;
+        border-radius: 12px;
+        padding: 12px 10px;
+        cursor: pointer;
+        touch-action: manipulation;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+        transition: transform 0.1s ease, background 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+        background: #e1e3e9;
+      }
+
+      .panel-mid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+        align-items: stretch;
+      }
+
+      .panel-mid .btn {
+        height: 64px;
+        font-size: 18px;
+      }
+
+      .panel-bottom {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+      }
+
+      .btn-eco {
+        background: #dceddf;
+      }
+
+      .btn-hot,
+      .btn-warm {
+        background: #f5e2d8;
+      }
+
+      .btn-cold,
+      .btn-room {
+        background: #dde6f6;
+      }
+
+      .btn-milk {
+        background: #f3f0ff;
+      }
+
+      .btn-lock {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #9a1d1d;
+        display: inline-block;
+        margin-left: 6px;
+      }
+
+      .btn-lock-icon {
+        display: inline-block;
+        width: 14px;
+        height: 12px;
+        margin-left: 6px;
+        border: 2px solid #9a1d1d;
+        border-radius: 3px;
+        position: relative;
+        box-sizing: border-box;
+      }
+
+      .btn-lock-icon::before {
+        content: "";
+        position: absolute;
+        width: 8px;
+        height: 6px;
+        border: 2px solid #9a1d1d;
+        border-bottom: none;
+        border-radius: 6px 6px 0 0;
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-sizing: border-box;
+      }
+
+      .eco-note {
+        display: block;
+        font-size: 10px;
+        font-weight: 600;
+        color: #2a6b3d;
+        letter-spacing: 0.02em;
+      }
+
+      .spout-wrap {
+        width: min(100%, var(--spout-max));
+        position: relative;
+      }
+
+      .spout-img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .stream {
+        position: absolute;
+        left: 50%;
+        top: 44%;
+        transform: translateX(-50%);
+        width: var(--stream-width);
+        height: 0;
+        border-radius: 0 0 12px 12px;
+        opacity: 0;
+        transition: height 0.2s ease, opacity 0.2s ease;
+      }
+
+      .stream.on {
+        height: 160px;
+        opacity: 0.9;
+      }
+
+      .hint {
+        margin: 0;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+        text-align: center;
+      }
+
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .page {
+          padding: 18px 12px 32px;
+        }
+
+        .panel-surface {
+          padding: 16px;
+        }
+
+        .stream {
+          top: 46%;
+          height: 120px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .page {
+          padding: 14px 10px 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <section class="panel">
+        <div class="panel-wrap">
+          <div class="panel-surface">
+            <div class="panel-top">
+              <div class="panel-title">Operation Panel</div>
+              <div class="lcd dim" id="lcd">
+                <span class="lcd-value" id="lcd-value">----</span>
+                <span class="lcd-unit" id="lcd-unit">ml</span>
+              </div>
+              <div class="lamp-row">
+                <div class="lamp-item">
+                  <span class="lamp lock" id="lamp-lock" aria-hidden="true"></span>
+                  <span>LOCK</span>
+                </div>
+                <div class="lamp-item">
+                  <span class="lamp eco" id="lamp-eco" aria-hidden="true"></span>
+                  <span>ECO</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-mid">
+              <button class="btn btn-minus" data-action="minus" aria-label="量を減らす">-</button>
+              <button class="btn btn-eco" data-action="eco" aria-label="エコ切替">
+                ECO<span class="eco-note">/ キャンセル</span>
+              </button>
+              <button class="btn btn-plus" data-action="plus" aria-label="量を増やす">+</button>
+            </div>
+
+            <div class="panel-bottom">
+              <button class="btn btn-hot" data-action="hot" aria-label="温水">
+                温水<span class="btn-lock-icon" aria-hidden="true"></span>
+              </button>
+              <button class="btn btn-warm" data-action="warm" aria-label="白湯">
+                白湯<span class="btn-lock-icon" aria-hidden="true"></span>
+              </button>
+              <button class="btn btn-cold" data-action="cold" aria-label="冷水">冷水</button>
+              <button class="btn btn-room" data-action="room" aria-label="常温水">常温水</button>
+              <button class="btn btn-milk" data-action="milk" aria-label="粉ミルク">
+                粉ミルク<span class="btn-lock-icon" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <p class="hint">ボタンはHTML/CSSで再現しています。</p>
+
+      <section class="spout">
+        <div class="spout-wrap">
+          <img src="取水口.png" alt="取水口" class="spout-img" />
+          <div class="stream" id="stream"></div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const MIN_AMOUNT = 10;
+      const MAX_AMOUNT = 5000;
+      const STEP = 10;
+      const HOLD_INTERVAL = 100;
+      const HOLD_DELAY = 400;
+      const UNLOCK_HOLD = 3000;
+      const DISPENSE_DURATION = 3500;
+      const RELock_DELAY = 5000;
+
+      const COLORS = {
+        cold: "#6496FF",
+        room: "#C8DCFF",
+        hot: "#FF6432",
+        warm: "#FFB464",
+        milkWarm: "#FFF2D6",
+        milkCold: "#CFE3FF"
+      };
+
+      const state = {
+        amount: null,
+        isLocked: true,
+        ecoMode: false,
+        isDispensing: false,
+        dispenseMode: null,
+        dispensingType: null,
+        pendingAction: null,
+        milkPhase: 0,
+        milkTotal: 0,
+        unlockButton: null,
+        memory: {
+          coldRoom: 150,
+          hot: 200,
+          warm: 180,
+          milk: 240
+        },
+        timers: {
+          hold: null,
+          holdDelay: null,
+          unlock: null,
+          dispense: null,
+          relock: null,
+          blink: null
+        }
+      };
+
+      const lcd = document.getElementById("lcd");
+      const lcdValue = document.getElementById("lcd-value");
+      const lcdUnit = document.getElementById("lcd-unit");
+      const lampLock = document.getElementById("lamp-lock");
+      const lampEco = document.getElementById("lamp-eco");
+      const stream = document.getElementById("stream");
+
+      const buttons = document.querySelectorAll(".btn");
+
+      function clampAmount(value) {
+        return Math.min(MAX_AMOUNT, Math.max(MIN_AMOUNT, value));
+      }
+
+      function getMemoryBase() {
+        if (!state.isLocked && state.unlockButton) {
+          return state.memory[state.unlockButton] || MIN_AMOUNT;
+        }
+        return state.memory.coldRoom;
+      }
+
+      function setAmount(value) {
+        state.amount = clampAmount(value);
+        updateLCD();
+      }
+
+      function clearAmount() {
+        state.amount = null;
+        updateLCD();
+      }
+
+      function updateLCD() {
+        const hasAmount = state.amount !== null;
+        lcdValue.textContent = hasAmount ? state.amount : "";
+        lcd.classList.toggle("dim", !hasAmount);
+        lcd.classList.toggle("off", !hasAmount);
+        lcdUnit.classList.toggle("hidden", !hasAmount);
+      }
+
+      function setLCDBlink(on) {
+        lcdValue.classList.toggle("blink", on);
+      }
+
+      function blinkUnit() {
+        lcdUnit.classList.add("blink");
+        clearTimeout(state.timers.blink);
+        state.timers.blink = setTimeout(() => {
+          lcdUnit.classList.remove("blink");
+        }, 2000);
+      }
+
+      function setEco(on) {
+        state.ecoMode = on;
+        lampEco.classList.toggle("on", on);
+      }
+
+      function setLock(on) {
+        state.isLocked = on;
+        lampLock.classList.toggle("on", !on);
+        if (on) {
+          state.unlockButton = null;
+        }
+      }
+
+      function startRelockTimer() {
+        clearTimeout(state.timers.relock);
+        state.timers.relock = setTimeout(() => {
+          setLock(true);
+        }, RELock_DELAY);
+      }
+
+      function unlockHot(buttonType) {
+        setLock(false);
+        state.unlockButton = buttonType;
+        startRelockTimer();
+      }
+
+      function setStream(active, color) {
+        if (active) {
+          stream.classList.add("on");
+          stream.style.background = color;
+        } else {
+          stream.classList.remove("on");
+          stream.style.background = "transparent";
+        }
+      }
+
+      function startDispensing(type, mode, amount, showLCD) {
+        state.isDispensing = true;
+        state.dispenseMode = mode;
+        state.dispensingType = type;
+        setLCDBlink(Boolean(showLCD));
+        setStream(true, COLORS[type]);
+
+        if (mode === "auto") {
+          clearTimeout(state.timers.dispense);
+          state.timers.dispense = setTimeout(() => {
+            finishDispensing(true);
+          }, DISPENSE_DURATION);
+        }
+      }
+
+      function finishDispensing(complete) {
+        const isMilkWarmPhase = state.dispensingType === "milkWarm" && state.milkPhase === 1;
+        clearTimeout(state.timers.dispense);
+        setLCDBlink(false);
+        setStream(false, "transparent");
+        state.isDispensing = false;
+        state.dispenseMode = null;
+        state.dispensingType = null;
+
+        if (!complete) {
+          clearAmount();
+          state.milkPhase = 0;
+          state.milkTotal = 0;
+        }
+
+        if (!state.isLocked && !isMilkWarmPhase) {
+          startRelockTimer();
+        }
+      }
+
+      function cancelDispensing() {
+        if (!state.isDispensing) return;
+        finishDispensing(false);
+      }
+
+      function rememberAmount(type, amount) {
+        if (type === "cold" || type === "room") {
+          state.memory.coldRoom = amount;
+        } else if (type === "hot") {
+          state.memory.hot = amount;
+        } else if (type === "warm") {
+          state.memory.warm = amount;
+        } else if (type === "milk") {
+          state.memory.milk = amount;
+        }
+      }
+
+      function adjustAmount(delta) {
+        if (state.amount === null) {
+          setAmount(getMemoryBase());
+        }
+        setAmount(state.amount + delta);
+      }
+
+      function handlePlusMinus(action) {
+        if (state.isDispensing && state.dispenseMode === "auto") {
+          cancelDispensing();
+          return;
+        }
+        adjustAmount(action === "plus" ? STEP : -STEP);
+        if (!state.isLocked) startRelockTimer();
+      }
+
+      function handleEcoPress(isLong) {
+        if (isLong) {
+          cancelDispensing();
+          clearAmount();
+          return;
+        }
+        if (state.isDispensing && state.dispenseMode === "auto") {
+          cancelDispensing();
+          return;
+        }
+        setEco(!state.ecoMode);
+      }
+
+      function requireUnlock() {
+        if (state.isLocked) {
+          return false;
+        }
+        startRelockTimer();
+        return true;
+      }
+
+      function beginDispensePress(type) {
+        if (state.isDispensing && state.dispenseMode === "auto") {
+          cancelDispensing();
+          return;
+        }
+
+        const isHotGroup = type === "hot" || type === "warm" || type === "milk";
+        if (isHotGroup && state.isLocked) return;
+
+        if (type === "milk") {
+          if (state.amount === null) {
+            blinkUnit();
+            return;
+          }
+          state.pendingAction = "milk";
+          return;
+        }
+
+        if (state.amount !== null) {
+          state.pendingAction = type;
+          return;
+        }
+
+        startDispensing(type, "hold", 0, false);
+      }
+
+      function endDispensePress() {
+        if (state.dispenseMode === "hold") {
+          finishDispensing(true);
+        }
+      }
+
+      function startQueuedDispense() {
+        if (!state.pendingAction) return;
+        const type = state.pendingAction;
+        state.pendingAction = null;
+
+        if (type === "milk") {
+          if (state.amount === null) {
+            blinkUnit();
+            return;
+          }
+          if (state.milkPhase === 0) {
+            state.milkTotal = state.amount;
+            rememberAmount("milk", state.amount);
+            startDispensing("milkWarm", "auto", state.amount * 0.6, true);
+            state.milkPhase = 1;
+            return;
+          }
+          if (state.milkPhase === 1) {
+            startDispensing("milkCold", "auto", state.milkTotal * 0.4, true);
+            state.milkPhase = 0;
+            state.milkTotal = 0;
+            return;
+          }
+        }
+
+        if (state.amount !== null) {
+          rememberAmount(type, state.amount);
+          startDispensing(type, "auto", state.amount, true);
+        }
+      }
+
+      function setupButtonHandlers() {
+        buttons.forEach((button) => {
+          const action = button.dataset.action;
+
+          if (action === "plus" || action === "minus") {
+            button.addEventListener("pointerdown", (event) => {
+              event.preventDefault();
+              handlePlusMinus(action);
+              clearInterval(state.timers.hold);
+              clearTimeout(state.timers.holdDelay);
+              state.timers.holdDelay = setTimeout(() => {
+                state.timers.hold = setInterval(() => {
+                  handlePlusMinus(action);
+                }, HOLD_INTERVAL);
+              }, HOLD_DELAY);
+            });
+            button.addEventListener("pointerup", () => {
+              clearInterval(state.timers.hold);
+              clearTimeout(state.timers.holdDelay);
+            });
+            button.addEventListener("pointerleave", () => {
+              clearInterval(state.timers.hold);
+              clearTimeout(state.timers.holdDelay);
+            });
+            return;
+          }
+
+          if (action === "eco") {
+            let longPressed = false;
+            button.addEventListener("pointerdown", (event) => {
+              event.preventDefault();
+              longPressed = false;
+              clearTimeout(state.timers.holdDelay);
+              state.timers.holdDelay = setTimeout(() => {
+                longPressed = true;
+                handleEcoPress(true);
+              }, 900);
+            });
+            button.addEventListener("pointerup", () => {
+              clearTimeout(state.timers.holdDelay);
+              if (!longPressed) handleEcoPress(false);
+            });
+            button.addEventListener("pointerleave", () => {
+              clearTimeout(state.timers.holdDelay);
+            });
+            return;
+          }
+
+          if (action === "hot" || action === "warm" || action === "milk") {
+            button.addEventListener("pointerdown", (event) => {
+              event.preventDefault();
+              if (state.isDispensing && state.dispenseMode === "auto") {
+                cancelDispensing();
+                return;
+              }
+              if (!state.isLocked) {
+                beginDispensePress(action);
+                return;
+              }
+              clearTimeout(state.timers.unlock);
+              state.timers.unlock = setTimeout(() => {
+                unlockHot(action);
+              }, UNLOCK_HOLD);
+            });
+            button.addEventListener("pointerup", () => {
+              clearTimeout(state.timers.unlock);
+              endDispensePress();
+              startQueuedDispense();
+            });
+            button.addEventListener("pointerleave", () => {
+              clearTimeout(state.timers.unlock);
+              endDispensePress();
+            });
+            return;
+          }
+
+          if (action === "cold" || action === "room") {
+            button.addEventListener("pointerdown", (event) => {
+              event.preventDefault();
+              beginDispensePress(action);
+            });
+            button.addEventListener("pointerup", () => {
+              endDispensePress();
+              startQueuedDispense();
+            });
+            button.addEventListener("pointerleave", () => {
+              endDispensePress();
+            });
+          }
+        });
+      }
+
+      function init() {
+        updateLCD();
+        setEco(false);
+        setLock(true);
+        setupButtonHandlers();
+      }
+
+      init();
+    </script>
+  </body>
+</html>
