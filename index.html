@@ -41,6 +41,16 @@
         align-items: center;
       }
 
+      .main-view {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        align-items: center;
+        min-height: 100vh;
+        justify-content: flex-start;
+      }
+
       .panel,
       .spout {
         width: 100%;
@@ -606,6 +616,7 @@
         border-radius: 12px;
         padding: 16px;
         color: rgba(255, 255, 255, 0.75);
+        margin-top: 8px;
       }
 
       .notes h3 {
@@ -637,11 +648,22 @@
         color: rgba(255, 255, 255, 0.75);
         font-size: 12px;
         line-height: 1.6;
+        margin-top: 8px;
       }
 
       .rules h3 {
         margin: 0 0 8px;
         font-size: 13px;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .rule-section {
+        margin-top: 10px;
+      }
+
+      .rule-section h4 {
+        margin: 0 0 4px;
+        font-size: 12px;
         color: rgba(255, 255, 255, 0.85);
       }
 
@@ -746,13 +768,41 @@
           font-size: 10px;
         }
       }
+
+      @media (min-width: 900px) and (min-height: 900px) {
+        :root {
+          --panel-max: 980px;
+          --spout-max: 420px;
+        }
+
+        .panel-surface {
+          padding: 26px 30px 30px;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .page {
+          padding: 12px 8px 24px;
+          gap: 18px;
+        }
+
+        .panel-surface {
+          padding: 12px;
+          gap: 14px;
+        }
+
+        .main-view {
+          gap: 18px;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="page">
-      <section class="panel">
-        <div class="panel-wrap">
-          <div class="panel-surface">
+      <div class="main-view">
+        <section class="panel">
+          <div class="panel-wrap">
+            <div class="panel-surface">
             <div class="panel-top">
               <div class="panel-title">Operation Panel</div>
             </div>
@@ -832,28 +882,29 @@
                 </span>
               </button>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <p class="hint">ボタンはHTML/CSSで再現しています。</p>
-
-      <section class="spout">
-        <div class="spout-wrap">
-          <div class="spout-body" aria-label="取水口">
-            <div class="spout-nozzle"></div>
-            <div class="spout-mouth"></div>
-            <div class="spout-drip"></div>
-            <div class="cup" id="cup" aria-hidden="true">
-              <div class="cup-fill" id="cup-fill"></div>
-              <div class="cup-overflow"></div>
             </div>
-            <div class="spill" id="spill" aria-hidden="true"></div>
-            <div class="spout-tray" id="spout-tray" aria-hidden="true"></div>
           </div>
-          <div class="stream" id="stream"></div>
-        </div>
-      </section>
+        </section>
+
+        <p class="hint">ボタンはHTML/CSSで再現しています。</p>
+
+        <section class="spout">
+          <div class="spout-wrap">
+            <div class="spout-body" aria-label="取水口">
+              <div class="spout-nozzle"></div>
+              <div class="spout-mouth"></div>
+              <div class="spout-drip"></div>
+              <div class="cup" id="cup" aria-hidden="true">
+                <div class="cup-fill" id="cup-fill"></div>
+                <div class="cup-overflow"></div>
+              </div>
+              <div class="spill" id="spill" aria-hidden="true"></div>
+              <div class="spout-tray" id="spout-tray" aria-hidden="true"></div>
+            </div>
+            <div class="stream" id="stream"></div>
+          </div>
+        </section>
+      </div>
 
       <section class="notes">
         <h3>メモ</h3>
@@ -861,26 +912,72 @@
       </section>
 
       <section class="rules">
-        <h3>挙動ルール（補足）</h3>
-        <ul>
-          <li>量指定なし：押している間だけ出水、離すと停止、液晶は表示しない</li>
-          <li>量指定あり：押して離しても出水継続（約3.5秒）、液晶は点滅</li>
-          <li>取水完了後は液晶の数値が消える</li>
-          <li>+/- 初回押下は150表示のみ、2回目以降10mlずつ増減</li>
-          <li>無操作が続くと数値は消える（約3秒）</li>
-          <li>冷水/常温水：ロック不要、量なしは押しっぱなし、量ありは自動取水</li>
-          <li>冷水/常温水は共通メモリ</li>
-          <li>温水/白湯：3秒長押し解除、解除に使ったボタンのみ取水可能</li>
-          <li>温水/白湯は取水完了後5秒で再ロック、再ロック時に液晶消去</li>
-          <li>粉ミルク：ロック解除+量指定必須、60%温水→40%冷水</li>
-          <li>粉ミルク2回目完了で液晶消去、温水完了時はロック再投入</li>
-          <li>ロック解除中に他の温水系を押すと取水なし/液晶消去/再ロック</li>
-          <li>ロック解除中に量指定して冷水/常温水を押すと取水なし/液晶消去/再ロック</li>
-          <li>温水解除中でも冷水/常温水は自由量取水、最後の操作から5秒で再ロック</li>
-          <li>ECO：短押しでON/OFF、長押し2秒でキャンセル（取水停止+量リセット）</li>
-          <li>色：冷水=青/常温=薄青/温水=橙/白湯=薄橙/粉ミルク=クリーム</li>
-          <li>量なし出水はゆっくり溜まり、満杯後は溢れ+受け皿濡れ</li>
-        </ul>
+        <h3>挙動ルール</h3>
+
+        <div class="rule-section">
+          <h4>デフォルト</h4>
+          <ul>
+            <li>量指定なし：押している間だけ出水、離すと停止、液晶は表示しない</li>
+            <li>量指定あり：押して離しても出水継続（約3.5秒）、液晶は点滅</li>
+            <li>取水完了後は液晶の数値が消える</li>
+          </ul>
+        </div>
+
+        <div class="rule-section">
+          <h4>量指定（+ / -）</h4>
+          <ul>
+            <li>初回押下は150表示のみ、2回目以降10mlずつ増減</li>
+            <li>無操作が続くと数値は消える（約3秒）</li>
+          </ul>
+        </div>
+
+        <div class="rule-section">
+          <h4>冷水・常温水</h4>
+          <ul>
+            <li>ロック不要、量なしは押しっぱなし、量ありは自動取水</li>
+            <li>冷水/常温水は共通メモリ</li>
+          </ul>
+        </div>
+
+        <div class="rule-section">
+          <h4>温水・白湯</h4>
+          <ul>
+            <li>3秒長押し解除、解除に使ったボタンのみ取水可能</li>
+            <li>取水完了後5秒で再ロック、再ロック時に液晶消去</li>
+          </ul>
+        </div>
+
+        <div class="rule-section">
+          <h4>粉ミルク</h4>
+          <ul>
+            <li>ロック解除+量指定必須、60%温水→40%冷水</li>
+            <li>2回目完了で液晶消去、温水完了時はロック再投入</li>
+          </ul>
+        </div>
+
+        <div class="rule-section">
+          <h4>例外（ロック解除中）</h4>
+          <ul>
+            <li>他の温水系を押すと取水なし/液晶消去/再ロック</li>
+            <li>量指定して冷水/常温水を押すと取水なし/液晶消去/再ロック</li>
+            <li>冷水/常温水は自由量取水、最後の操作から5秒で再ロック</li>
+          </ul>
+        </div>
+
+        <div class="rule-section">
+          <h4>ECO</h4>
+          <ul>
+            <li>短押しでON/OFF、長押し2秒でキャンセル（取水停止+量リセット）</li>
+          </ul>
+        </div>
+
+        <div class="rule-section">
+          <h4>アニメーション</h4>
+          <ul>
+            <li>色：冷水=青/常温=薄青/温水=橙/白湯=薄橙/粉ミルク=クリーム</li>
+            <li>量なし出水はゆっくり溜まり、満杯後は溢れ+受け皿濡れ</li>
+          </ul>
+        </div>
       </section>
     </div>
 
