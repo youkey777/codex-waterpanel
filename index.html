@@ -128,12 +128,12 @@
         border-radius: 6px;
         background: #1a1a1a;
         font-family: "Courier New", monospace;
-        font-size: clamp(18px, 2.6vw, 30px);
+        font-size: clamp(20px, 3vw, 34px);
         letter-spacing: 0.06em;
         color: var(--lcd-green);
         text-shadow: 0 0 6px rgba(0, 255, 102, 0.5);
         display: flex;
-        align-items: baseline;
+        align-items: center;
         gap: 6px;
         user-select: none;
         min-width: 250px;
@@ -159,7 +159,12 @@
       }
 
       .lcd-unit {
-        font-size: 0.7em;
+        font-size: 0.8em;
+      }
+
+      .lcd-value,
+      .lcd-unit {
+        line-height: 1;
       }
 
       .lcd-unit.hidden {
@@ -762,7 +767,7 @@
         .lcd {
           min-width: 230px;
           height: 58px;
-          font-size: clamp(16px, 4.6vw, 24px);
+          font-size: clamp(20px, 5.8vw, 30px);
         }
 
         .btn-eco {
