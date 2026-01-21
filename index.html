@@ -676,9 +676,40 @@
       }
 
       .rules h3 {
-        margin: 0 0 8px;
+        margin: 0;
         font-size: 13px;
         color: rgba(255, 255, 255, 0.85);
+      }
+
+      .rules-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .rules-toggle {
+        width: 16px;
+        height: 16px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 12px;
+        cursor: pointer;
+        opacity: 0.6;
+      }
+
+      .rules-toggle:hover {
+        opacity: 0.9;
+      }
+
+      .rules-content {
+        display: none;
+        margin-top: 8px;
+      }
+
+      .rules-content.is-open {
+        display: block;
       }
 
       .rule-section {
@@ -957,9 +988,13 @@
       </section>
 
       <section class="rules">
-        <h3>挙動ルール</h3>
+        <div class="rules-header">
+          <h3>挙動ルール</h3>
+          <button class="rules-toggle" type="button" aria-expanded="false" aria-controls="rules-content">▽</button>
+        </div>
 
-        <div class="rule-section">
+        <div class="rules-content" id="rules-content">
+          <div class="rule-section">
           <h4>デフォルト</h4>
           <ul>
             <li>量指定なし：押している間だけ出水、離すと停止、液晶は表示しない</li>
@@ -1044,6 +1079,7 @@
             <li>量なし出水はゆっくり溜まり、満杯後は溢れ+受け皿濡れ</li>
           </ul>
         </div>
+        </div>
       </section>
     </div>
 
@@ -1111,6 +1147,16 @@
       const spoutTray = document.getElementById("spout-tray");
 
       const buttons = document.querySelectorAll(".btn");
+      const rulesToggle = document.querySelector(".rules-toggle");
+      const rulesContent = document.getElementById("rules-content");
+
+      if (rulesToggle && rulesContent) {
+        rulesToggle.addEventListener("click", () => {
+          const isOpen = rulesContent.classList.toggle("is-open");
+          rulesToggle.setAttribute("aria-expanded", String(isOpen));
+          rulesToggle.textContent = isOpen ? "△" : "▽";
+        });
+      }
 
       function clampAmount(value) {
         return Math.min(MAX_AMOUNT, Math.max(MIN_AMOUNT, value));
