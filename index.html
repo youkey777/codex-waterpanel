@@ -196,6 +196,13 @@
         box-shadow: 0 0 12px rgba(255, 59, 48, 0.8);
       }
 
+      .lamp.attention {
+        animation: lampBlink 0.5s ease-in-out infinite;
+        background: var(--lock-red);
+        box-shadow: 0 0 14px rgba(255, 59, 48, 0.9);
+        opacity: 1;
+      }
+
       .lamp.on.eco {
         opacity: 1;
         background: var(--eco-green);
@@ -678,6 +685,16 @@
         }
       }
 
+      @keyframes lampBlink {
+        0%,
+        100% {
+          opacity: 0.2;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
       @media (max-width: 768px) {
         .page {
           padding: 18px 12px 32px;
@@ -927,7 +944,8 @@
           <h4>量指定（+ / -）</h4>
           <ul>
             <li>初回押下は150表示のみ、2回目以降10mlずつ増減</li>
-            <li>無操作が続くと数値は消える（約3秒）</li>
+            <li>無操作が続くと数値は消える（約15秒）</li>
+            <li>量指定→ロック解除でも表示はリセットされない</li>
           </ul>
         </div>
 
@@ -943,7 +961,16 @@
           <h4>温水・白湯</h4>
           <ul>
             <li>3秒長押し解除、解除に使ったボタンのみ取水可能</li>
-            <li>取水完了後5秒で再ロック、再ロック時に液晶消去</li>
+            <li>取水完了後5秒で再ロック（液晶表示は残る）</li>
+          </ul>
+        </div>
+
+        <div class="rule-section">
+          <h4>ロック解除と取水のルール</h4>
+          <ul>
+            <li>ロック解除に使ったボタンでしか取水できない</li>
+            <li>別の温水系ボタンを押すとキャンセル</li>
+            <li>ロック解除中でも冷水/常温水は自由量のみ取水可（量指定は不可）</li>
           </ul>
         </div>
 
@@ -958,9 +985,19 @@
         <div class="rule-section">
           <h4>例外（ロック解除中）</h4>
           <ul>
-            <li>他の温水系を押すと取水なし/液晶消去/再ロック</li>
             <li>量指定して冷水/常温水を押すと取水なし/液晶消去/再ロック</li>
-            <li>冷水/常温水は自由量取水、最後の操作から5秒で再ロック</li>
+            <li>冷水/常温水の自由量取水後、最後の操作から5秒で再ロック</li>
+          </ul>
+        </div>
+
+        <div class="rule-section">
+          <h4>指定量メモリ</h4>
+          <ul>
+            <li>冷水と常温水は共通のメモリ</li>
+            <li>ロック解除が必要な水は、解除に使ったボタンに記憶</li>
+            <li>量指定中に別ボタンを押すとキャンセル</li>
+            <li>量指定→ロック解除でも次の取水で解除ボタンに記憶</li>
+            <li>記憶値から始めたい時は先にロック解除→量指定</li>
           </ul>
         </div>
 
@@ -989,8 +1026,9 @@
       const HOLD_DELAY = 400;
       const UNLOCK_HOLD = 3000;
       const DISPENSE_DURATION = 3500;
-      const DISPLAY_CLEAR_DELAY = 3000;
+      const DISPLAY_CLEAR_DELAY = 15000;
       const RELock_DELAY = 5000;
+      const ECO_HOLD_CANCEL = 1500;
 
       const COLORS = {
         cold: "#6496FF",
@@ -1012,6 +1050,7 @@
         milkPhase: 0,
         milkTotal: 0,
         unlockButton: null,
+        unlockTriggered: false,
         memory: {
           coldRoom: 150,
           hot: 150,
@@ -1026,7 +1065,8 @@
           relock: null,
           blink: null,
           displayClear: null,
-          overflow: null
+          overflow: null,
+          lampBlink: null
         }
       };
 
@@ -1113,7 +1153,7 @@
       function startRelockTimer() {
         clearTimeout(state.timers.relock);
         state.timers.relock = setTimeout(() => {
-          setLock(true);
+          setLock(true, { keepAmount: true });
         }, RELock_DELAY);
       }
 
@@ -1121,7 +1161,20 @@
         setLock(false);
         state.unlockButton = buttonType;
         startRelockTimer();
-        clearAmount();
+        if (state.amount === null) {
+          clearAmount();
+        }
+      }
+
+      function blinkLockLamp() {
+        if (!lampLock) return;
+        lampLock.classList.remove("attention");
+        void lampLock.offsetWidth;
+        lampLock.classList.add("attention");
+        clearTimeout(state.timers.lampBlink);
+        state.timers.lampBlink = setTimeout(() => {
+          lampLock.classList.remove("attention");
+        }, 1800);
       }
 
       function scheduleDisplayClear() {
@@ -1294,6 +1347,9 @@
         if (isLong) {
           cancelDispensing();
           clearAmount();
+          if (!state.isLocked) {
+            setLock(true, { keepAmount: true });
+          }
           return;
         }
         if (state.isDispensing && state.dispenseMode === "auto") {
@@ -1318,7 +1374,10 @@
         }
 
         const isHotGroup = type === "hot" || type === "warm" || type === "milk";
-        if (isHotGroup && state.isLocked && !(type === "milk" && state.milkPhase === 1)) return;
+        if (isHotGroup && state.isLocked && !(type === "milk" && state.milkPhase === 1)) {
+          blinkLockLamp();
+          return;
+        }
         if (!state.isLocked && state.unlockButton && isHotGroup && type !== state.unlockButton) {
           setLock(true);
           clearAmount();
@@ -1419,7 +1478,7 @@
               state.timers.holdDelay = setTimeout(() => {
                 longPressed = true;
                 handleEcoPress(true);
-              }, 2000);
+              }, ECO_HOLD_CANCEL);
             });
             button.addEventListener("pointerup", () => {
               clearTimeout(state.timers.holdDelay);
@@ -1446,18 +1505,26 @@
                 beginDispensePress(action);
                 return;
               }
+              state.unlockTriggered = false;
               clearTimeout(state.timers.unlock);
               state.timers.unlock = setTimeout(() => {
+                state.unlockTriggered = true;
                 unlockHot(action);
               }, UNLOCK_HOLD);
             });
             button.addEventListener("pointerup", () => {
               clearTimeout(state.timers.unlock);
+              if (state.isLocked && !state.unlockTriggered) {
+                blinkLockLamp();
+              }
               endDispensePress();
               startQueuedDispense();
             });
             button.addEventListener("pointerleave", () => {
               clearTimeout(state.timers.unlock);
+              if (state.isLocked && !state.unlockTriggered) {
+                blinkLockLamp();
+              }
               endDispensePress();
             });
             return;
