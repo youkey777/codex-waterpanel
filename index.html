@@ -14,7 +14,7 @@
         --lock-red: #ff3b30;
         --eco-green: #31d158;
         --panel-max: 900px;
-        --spout-max: 520px;
+        --spout-max: 320px;
         --stream-width: 34px;
       }
 
@@ -79,7 +79,7 @@
       }
 
       .lcd {
-        padding: 6px 14px;
+        padding: 0 18px;
         border-radius: 6px;
         background: #0f1115;
         font-family: "Courier New", monospace;
@@ -91,8 +91,10 @@
         align-items: baseline;
         gap: 6px;
         user-select: none;
-        min-width: 130px;
+        min-width: 260px;
+        height: 48px;
         justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       .lcd.off {
@@ -118,6 +120,12 @@
         display: none;
       }
 
+      .lcd.unit-only .lcd-unit {
+        font-size: 1em;
+        color: var(--lcd-green);
+        text-shadow: 0 0 12px rgba(0, 255, 102, 0.8);
+      }
+
       .lamp-row {
         display: flex;
         align-items: center;
@@ -136,8 +144,9 @@
         width: 14px;
         height: 14px;
         border-radius: 50%;
-        opacity: 0.2;
-        box-shadow: none;
+        opacity: 1;
+        background: #101216;
+        box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.25);
         transition: all 0.2s ease;
       }
 
@@ -254,18 +263,111 @@
       .spout-wrap {
         width: min(100%, var(--spout-max));
         position: relative;
+        display: flex;
+        justify-content: center;
+        padding: 20px 0 40px;
       }
 
-      .spout-img {
+      .spout-body {
         width: 100%;
-        height: auto;
-        display: block;
+        max-width: 360px;
+        height: 210px;
+        background: linear-gradient(180deg, #f6f7f9, #d5d7dc);
+        border-radius: 26px;
+        box-shadow: 0 18px 28px rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 28px;
+      }
+
+      .spout-nozzle {
+        width: 120px;
+        height: 28px;
+        background: #2b2f36;
+        border-radius: 0 0 18px 18px;
+        position: absolute;
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.15);
+      }
+
+      .spout-mouth {
+        width: 46px;
+        height: 14px;
+        background: #101216;
+        border-radius: 0 0 10px 10px;
+        position: absolute;
+        top: 44px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.1);
+      }
+
+      .spout-tray {
+        position: absolute;
+        bottom: 14px;
+        width: 75%;
+        height: 18px;
+        background: #b9bdc7;
+        border-radius: 12px;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
+      }
+
+      .spout-drip {
+        position: absolute;
+        top: 58px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 10px;
+        height: 8px;
+        background: #20242b;
+        border-radius: 0 0 6px 6px;
+      }
+
+      .cup {
+        width: 88px;
+        height: 96px;
+        position: relative;
+        background: #ffffff;
+        border-radius: 6px 6px 16px 16px;
+        border: 2px solid #c9ced8;
+        box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
+        margin-top: 8px;
+      }
+
+      .cup::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: -8px;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 12px;
+        border-radius: 8px;
+        background: #eef1f6;
+        border: 2px solid #c9ced8;
+      }
+
+      .cup::after {
+        content: "";
+        position: absolute;
+        right: -14px;
+        top: 26px;
+        width: 22px;
+        height: 38px;
+        border: 3px solid #c9ced8;
+        border-left: none;
+        border-radius: 0 14px 14px 0;
       }
 
       .stream {
         position: absolute;
         left: 50%;
-        top: 44%;
+        top: 88px;
         transform: translateX(-50%);
         width: var(--stream-width);
         height: 0;
@@ -302,7 +404,7 @@
         }
 
         .stream {
-          top: 46%;
+          top: 92px;
           height: 120px;
         }
       }
@@ -366,7 +468,13 @@
 
       <section class="spout">
         <div class="spout-wrap">
-          <img src="取水口.png" alt="取水口" class="spout-img" />
+          <div class="spout-body" aria-label="取水口">
+            <div class="spout-nozzle"></div>
+            <div class="spout-mouth"></div>
+            <div class="spout-drip"></div>
+            <div class="cup" aria-hidden="true"></div>
+            <div class="spout-tray" aria-hidden="true"></div>
+          </div>
           <div class="stream" id="stream"></div>
         </div>
       </section>
@@ -380,6 +488,7 @@
       const HOLD_DELAY = 400;
       const UNLOCK_HOLD = 3000;
       const DISPENSE_DURATION = 3500;
+      const DISPLAY_CLEAR_DELAY = 3000;
       const RELock_DELAY = 5000;
 
       const COLORS = {
@@ -404,9 +513,9 @@
         unlockButton: null,
         memory: {
           coldRoom: 150,
-          hot: 200,
-          warm: 180,
-          milk: 240
+          hot: 150,
+          warm: 150,
+          milk: 150
         },
         timers: {
           hold: null,
@@ -414,7 +523,8 @@
           unlock: null,
           dispense: null,
           relock: null,
-          blink: null
+          blink: null,
+          displayClear: null
         }
       };
 
@@ -433,19 +543,21 @@
 
       function getMemoryBase() {
         if (!state.isLocked && state.unlockButton) {
-          return state.memory[state.unlockButton] || MIN_AMOUNT;
+          return state.memory[state.unlockButton] || 150;
         }
-        return state.memory.coldRoom;
+        return state.memory.coldRoom || 150;
       }
 
       function setAmount(value) {
         state.amount = clampAmount(value);
         updateLCD();
+        scheduleDisplayClear();
       }
 
       function clearAmount() {
         state.amount = null;
         updateLCD();
+        clearTimeout(state.timers.displayClear);
       }
 
       function updateLCD() {
@@ -461,10 +573,16 @@
       }
 
       function blinkUnit() {
+        lcdUnit.classList.remove("hidden");
+        lcd.classList.add("unit-only");
         lcdUnit.classList.add("blink");
         clearTimeout(state.timers.blink);
         state.timers.blink = setTimeout(() => {
           lcdUnit.classList.remove("blink");
+          lcd.classList.remove("unit-only");
+          if (state.amount === null) {
+            lcdUnit.classList.add("hidden");
+          }
         }, 2000);
       }
 
@@ -473,11 +591,16 @@
         lampEco.classList.toggle("on", on);
       }
 
-      function setLock(on) {
+      function setLock(on, options = {}) {
+        const keepAmount = options.keepAmount === true;
         state.isLocked = on;
         lampLock.classList.toggle("on", !on);
         if (on) {
+          if (state.unlockButton && !keepAmount) {
+            clearAmount();
+          }
           state.unlockButton = null;
+          state.pendingAction = null;
         }
       }
 
@@ -492,6 +615,16 @@
         setLock(false);
         state.unlockButton = buttonType;
         startRelockTimer();
+        clearAmount();
+      }
+
+      function scheduleDisplayClear() {
+        clearTimeout(state.timers.displayClear);
+        state.timers.displayClear = setTimeout(() => {
+          if (!state.isDispensing) {
+            clearAmount();
+          }
+        }, DISPLAY_CLEAR_DELAY);
       }
 
       function setStream(active, color) {
@@ -510,6 +643,11 @@
         state.dispensingType = type;
         setLCDBlink(Boolean(showLCD));
         setStream(true, COLORS[type]);
+        clearTimeout(state.timers.displayClear);
+        clearTimeout(state.timers.relock);
+        if (type === "hot" || type === "warm") {
+          setLock(false);
+        }
 
         if (mode === "auto") {
           clearTimeout(state.timers.dispense);
@@ -521,6 +659,8 @@
 
       function finishDispensing(complete) {
         const isMilkWarmPhase = state.dispensingType === "milkWarm" && state.milkPhase === 1;
+        const isMilkColdPhase = state.dispensingType === "milkCold";
+        const isHotDispense = state.dispensingType === "hot" || state.dispensingType === "warm";
         clearTimeout(state.timers.dispense);
         setLCDBlink(false);
         setStream(false, "transparent");
@@ -534,7 +674,16 @@
           state.milkTotal = 0;
         }
 
-        if (!state.isLocked && !isMilkWarmPhase) {
+        if (isMilkWarmPhase) {
+          setLock(true, { keepAmount: true });
+        } else if (complete && !isMilkWarmPhase) {
+          clearAmount();
+        }
+
+        if (isHotDispense) {
+          setLock(false);
+          startRelockTimer();
+        } else if (!state.isLocked && !isMilkWarmPhase && !isMilkColdPhase) {
           startRelockTimer();
         }
       }
@@ -559,6 +708,7 @@
       function adjustAmount(delta) {
         if (state.amount === null) {
           setAmount(getMemoryBase());
+          return;
         }
         setAmount(state.amount + delta);
       }
@@ -566,6 +716,10 @@
       function handlePlusMinus(action) {
         if (state.isDispensing && state.dispenseMode === "auto") {
           cancelDispensing();
+          return;
+        }
+        if (state.amount === null) {
+          setAmount(getMemoryBase());
           return;
         }
         adjustAmount(action === "plus" ? STEP : -STEP);
@@ -600,7 +754,12 @@
         }
 
         const isHotGroup = type === "hot" || type === "warm" || type === "milk";
-        if (isHotGroup && state.isLocked) return;
+        if (isHotGroup && state.isLocked && !(type === "milk" && state.milkPhase === 1)) return;
+        if (!state.isLocked && state.unlockButton && type !== state.unlockButton) {
+          setLock(true);
+          clearAmount();
+          return;
+        }
 
         if (type === "milk") {
           if (state.amount === null) {
@@ -692,7 +851,7 @@
               state.timers.holdDelay = setTimeout(() => {
                 longPressed = true;
                 handleEcoPress(true);
-              }, 900);
+              }, 2000);
             });
             button.addEventListener("pointerup", () => {
               clearTimeout(state.timers.holdDelay);
@@ -709,6 +868,10 @@
               event.preventDefault();
               if (state.isDispensing && state.dispenseMode === "auto") {
                 cancelDispensing();
+                return;
+              }
+              if (action === "milk" && state.milkPhase === 1) {
+                beginDispensePress(action);
                 return;
               }
               if (!state.isLocked) {
