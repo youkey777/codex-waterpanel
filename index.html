@@ -8,7 +8,7 @@
     />
     <title>ウォーターサーバー操作パネル デモ</title>
     <style>
-      :root {
+:root {
         --lcd-green: #00ff66;
         --lcd-dim: rgba(0, 255, 102, 0.3);
         --lock-red: #ff3b30;
@@ -31,7 +31,7 @@
         justify-content: center;
       }
 
-      ``.page {
+      .page {
         width: 100%;
         max-width: 1200px;
         padding: 24px 16px 40px;
@@ -41,68 +41,6 @@
         align-items: center;
       }
 
-      .panel-tabs {
-        width: min(100%, 720px);
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-
-      .tab-button {
-        border: 2px solid rgba(255, 255, 255, 0.22);
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.85);
-        border-radius: 14px;
-        padding: 14px 16px;
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-      }
-
-      .tab-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-      }
-
-      .tab-button.is-active {
-        background: #f7f7f7;
-        color: #1b1f27;
-        border-color: #d0d0d0;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      }
-      .panel-tabs {
-        width: min(100%, 720px);
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-
-      .tab-button {
-        border: 2px solid rgba(255, 255, 255, 0.22);
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.85);
-        border-radius: 14px;
-        padding: 14px 16px;
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-      }
-
-      .tab-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-      }
-
-      .tab-button.is-active {
-        background: #f7f7f7;
-        color: #1b1f27;
-        border-color: #d0d0d0;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      }
       .main-view {
         width: 100%;
         display: flex;
@@ -847,72 +785,10 @@
       }
 
       @media (max-width: 768px) {
-        ``.page {
+        .page {
           padding: 18px 12px 32px;
         }
 
-      .panel-tabs {
-        width: min(100%, 720px);
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-
-      .tab-button {
-        border: 2px solid rgba(255, 255, 255, 0.22);
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.85);
-        border-radius: 14px;
-        padding: 14px 16px;
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-      }
-
-      .tab-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-      }
-
-      .tab-button.is-active {
-        background: #f7f7f7;
-        color: #1b1f27;
-        border-color: #d0d0d0;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      }
-      .panel-tabs {
-        width: min(100%, 720px);
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-
-      .tab-button {
-        border: 2px solid rgba(255, 255, 255, 0.22);
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.85);
-        border-radius: 14px;
-        padding: 14px 16px;
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-      }
-
-      .tab-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-      }
-
-      .tab-button.is-active {
-        background: #f7f7f7;
-        color: #1b1f27;
-        border-color: #d0d0d0;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      }
         .panel-surface {
           padding: 16px;
         }
@@ -961,72 +837,10 @@
       }
 
       @media (max-width: 480px) {
-        ``.page {
+        .page {
           padding: 14px 10px 28px;
         }
 
-      .panel-tabs {
-        width: min(100%, 720px);
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-
-      .tab-button {
-        border: 2px solid rgba(255, 255, 255, 0.22);
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.85);
-        border-radius: 14px;
-        padding: 14px 16px;
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-      }
-
-      .tab-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-      }
-
-      .tab-button.is-active {
-        background: #f7f7f7;
-        color: #1b1f27;
-        border-color: #d0d0d0;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      }
-      .panel-tabs {
-        width: min(100%, 720px);
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-
-      .tab-button {
-        border: 2px solid rgba(255, 255, 255, 0.22);
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.85);
-        border-radius: 14px;
-        padding: 14px 16px;
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-      }
-
-      .tab-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-      }
-
-      .tab-button.is-active {
-        background: #f7f7f7;
-        color: #1b1f27;
-        border-color: #d0d0d0;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      }
         .lcd {
           min-width: 230px;
           height: 58px;
@@ -1083,73 +897,11 @@
       }
 
       @media (max-width: 420px) {
-        ``.page {
+        .page {
           padding: 12px 8px 24px;
           gap: 18px;
         }
 
-      .panel-tabs {
-        width: min(100%, 720px);
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-
-      .tab-button {
-        border: 2px solid rgba(255, 255, 255, 0.22);
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.85);
-        border-radius: 14px;
-        padding: 14px 16px;
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-      }
-
-      .tab-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-      }
-
-      .tab-button.is-active {
-        background: #f7f7f7;
-        color: #1b1f27;
-        border-color: #d0d0d0;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      }
-      .panel-tabs {
-        width: min(100%, 720px);
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-
-      .tab-button {
-        border: 2px solid rgba(255, 255, 255, 0.22);
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.85);
-        border-radius: 14px;
-        padding: 14px 16px;
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-      }
-
-      .tab-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-      }
-
-      .tab-button.is-active {
-        background: #f7f7f7;
-        color: #1b1f27;
-        border-color: #d0d0d0;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      }
         .panel-surface {
           padding: 12px;
           gap: 14px;
@@ -1180,13 +932,62 @@
           margin-left: -8px;
         }
       }
+      .panel-tabs {
+        width: min(100%, var(--panel-max));
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .tab-button {
+        border: 2px solid rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85);
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      .tab-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+      }
+
+      .tab-button.is-active {
+        background: #f7f7f7;
+        color: #1b1f27;
+        border-color: #d0d0d0;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      @media (max-width: 480px) {
+        .panel-tabs {
+          gap: 10px;
+        }
+
+        .tab-button {
+          font-size: 14px;
+          padding: 12px 10px;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .panel-tabs {
+          gap: 8px;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="page">
       <div class="panel-tabs" role="tablist" aria-label="操作パネル切替">
-        <button class="tab-button is-active" type="button" role="tab" aria-selected="true" data-tab="normal">ノーマルタイプ</button>
-        <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="iot">IoTタイプ</button>
+        <button class="tab-button is-active" type="button" role="tab" aria-selected="true" data-tab="normal">ノーマル</button>
+        <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="iot">IoT</button>
       </div>
       <div class="main-view">
         <section class="panel">
@@ -1485,7 +1286,7 @@
       const spoutTray = document.getElementById("spout-tray");
 
       const buttons = document.querySelectorAll(".btn");
-      `const rulesToggle = document.querySelector(".rules-toggle");
+      const rulesToggle = document.querySelector(".rules-toggle");
       const rulesContent = document.getElementById("rules-content");
       const tabButtons = document.querySelectorAll(".tab-button");
       let currentTab = "normal";
@@ -1507,6 +1308,8 @@
           setActiveTab(nextTab);
         });
       });
+
+      setActiveTab(currentTab);
 
       if (rulesToggle && rulesContent) {
         rulesToggle.addEventListener("click", () => {
