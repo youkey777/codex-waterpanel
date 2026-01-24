@@ -327,33 +327,34 @@
 
       body[data-panel-type="iot"] .panel-status {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr) auto auto auto minmax(0, 1fr);
         align-items: center;
         column-gap: 12px;
       }
 
       body[data-panel-type="iot"] .panel-status .btn-eco {
-        grid-column: 2;
+        grid-column: 3;
         justify-self: center;
+        align-self: center;
       }
 
       body[data-panel-type="iot"] .panel-status .lamp-row {
-        grid-column: 3;
+        grid-column: 4;
         position: static;
         transform: none;
-        justify-self: start;
+        justify-self: center;
+        align-self: center;
         gap: 10px;
       }
 
       body[data-panel-type="iot"] .panel-status .iot-users {
-        grid-column: 3;
+        grid-column: 5;
         position: static;
         transform: none;
         justify-self: end;
         align-self: center;
         display: flex;
         align-items: center;
-        margin-top: -6px;
       }
 
       body[data-panel-type="iot"] .lamp-item-eco .lamp,
@@ -1179,28 +1180,27 @@
         }
 
         body[data-panel-type="iot"] .panel-status {
-          grid-template-columns: minmax(0, 0.9fr) auto minmax(0, 1.1fr);
-          grid-template-areas: "lamp eco users";
+          grid-template-columns: minmax(0, 1fr) auto auto auto minmax(0, 1fr);
           column-gap: 8px;
         }
 
         body[data-panel-type="iot"] .panel-status .lamp-row {
-          grid-area: lamp;
-          grid-column: 1;
+          grid-column: 4;
           justify-self: start;
+          align-self: center;
           gap: 6px;
         }
 
         body[data-panel-type="iot"] .panel-status .btn-eco {
-          grid-area: eco;
-          grid-column: 2;
+          grid-column: 3;
           justify-self: center;
+          align-self: center;
         }
 
         body[data-panel-type="iot"] .panel-status .iot-users {
-          grid-area: users;
-          grid-column: 3;
+          grid-column: 5;
           justify-self: end;
+          align-self: center;
           gap: 4px;
         }
 
@@ -1297,14 +1297,17 @@
 
         body[data-panel-type="iot"] .panel-status .lamp-row {
           justify-self: start;
+          align-self: center;
         }
 
         body[data-panel-type="iot"] .panel-status .btn-eco {
           justify-self: center;
+          align-self: center;
         }
 
         body[data-panel-type="iot"] .panel-status .iot-users {
           justify-self: end;
+          align-self: center;
         }
 
         body[data-panel-type="iot"] .btn-eco {
@@ -1329,6 +1332,28 @@
 
         .lamp-item-lock {
           margin-left: -8px;
+        }
+      }
+
+      @media (max-width: 380px) {
+        body[data-panel-type="iot"] .panel-status {
+          grid-template-columns: auto auto minmax(0, 1fr);
+          column-gap: 6px;
+        }
+
+        body[data-panel-type="iot"] .panel-status .lamp-row {
+          grid-column: 1;
+          justify-self: start;
+        }
+
+        body[data-panel-type="iot"] .panel-status .btn-eco {
+          grid-column: 2;
+          justify-self: center;
+        }
+
+        body[data-panel-type="iot"] .panel-status .iot-users {
+          grid-column: 3;
+          justify-self: end;
         }
       }
     </style>
