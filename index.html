@@ -94,6 +94,8 @@
       .panel-wrap {
         width: min(100%, var(--panel-max));
         transform-origin: top center;
+        container-type: inline-size;
+        container-name: panel;
       }
 
       .panel-scale {
@@ -134,26 +136,43 @@
         align-items: center;
         gap: 18px;
         justify-content: center;
+        width: 100%;
+        max-width: clamp(340px, 80%, 520px);
+        justify-self: center;
       }
 
       .panel-status {
-        position: relative;
-        display: flex;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
         align-items: center;
+        column-gap: 18px;
         min-height: 56px;
         width: 100%;
+        max-width: clamp(320px, 80%, 520px);
+        justify-self: center;
+      }
+
+      .panel-status > * {
+        align-self: center;
       }
 
       .panel-status .btn-eco {
         z-index: 2;
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: center;
+        align-self: center;
       }
 
       .panel-status .lamp-row {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(120px, -50%);
+        position: static;
+        transform: none;
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: end;
+        align-self: center;
+        height: 44px;
+        align-items: center;
       }
 
       .lcd {
@@ -169,12 +188,15 @@
         align-items: center;
         gap: 6px;
         user-select: none;
-        min-width: 250px;
+        min-width: 0;
+        width: clamp(240px, 48vw, 340px);
+        max-width: 100%;
         height: 64px;
         justify-content: center;
         border: 1px solid #2b2b2b;
         box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6);
         position: relative;
+        justify-self: center;
       }
 
       .lcd.off {
@@ -309,11 +331,15 @@
       .iot-users {
         display: none;
         align-items: center;
-        gap: 8px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(220px, -50%);
+        gap: 10px;
+        position: static;
+        transform: none;
+        grid-column: 3;
+        grid-row: 1;
+        justify-self: start;
+        align-self: center;
+        height: 44px;
+        flex-wrap: nowrap;
         max-width: 100%;
       }
 
@@ -327,34 +353,40 @@
 
       body[data-panel-type="iot"] .panel-status {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto auto minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
         align-items: center;
-        column-gap: 12px;
+        column-gap: 18px;
       }
 
       body[data-panel-type="iot"] .panel-status .btn-eco {
-        grid-column: 3;
+        grid-column: 2;
+        grid-row: 1;
         justify-self: center;
         align-self: center;
       }
 
       body[data-panel-type="iot"] .panel-status .lamp-row {
-        grid-column: 2;
-        position: static;
-        transform: none;
-        justify-self: center;
-        align-self: center;
-        gap: 10px;
-      }
-
-      body[data-panel-type="iot"] .panel-status .iot-users {
-        grid-column: 4;
+        grid-column: 1;
+        grid-row: 1;
         position: static;
         transform: none;
         justify-self: end;
         align-self: center;
+        gap: 10px;
+        height: 44px;
+        align-items: center;
+      }
+
+      body[data-panel-type="iot"] .panel-status .iot-users {
+        grid-column: 3;
+        grid-row: 1;
+        position: static;
+        transform: none;
+        justify-self: start;
+        align-self: center;
         display: flex;
         align-items: center;
+        height: 44px;
       }
 
       body[data-panel-type="iot"] .lamp-item-eco .lamp,
@@ -376,14 +408,16 @@
       }
 
       body[data-panel-type="iot"] .lcd {
-        --lcd-value-left: 48px;
-        --lcd-value-right: 96px;
-        min-width: 290px;
-        padding-right: 74px;
+        --lcd-value-left: clamp(36px, 6vw, 48px);
+        --lcd-value-right: clamp(64px, 10vw, 96px);
+        min-width: 0;
+        width: clamp(260px, 52vw, 360px);
+        max-width: 100%;
+        padding-right: clamp(44px, 9vw, 64px);
       }
 
       body[data-panel-type="iot"] .lcd-unit {
-        right: 58px;
+        right: clamp(36px, 6vw, 58px);
         bottom: 10px;
       }
 
@@ -1115,6 +1149,28 @@
         }
       }
 
+      @media (max-width: 671px) {
+        body[data-panel-type="iot"] .panel-status .iot-users {
+          display: grid !important;
+          grid-template-columns: repeat(2, 34px);
+          grid-auto-rows: 34px;
+          gap: 6px;
+          height: auto;
+          align-content: center;
+          justify-content: center;
+        }
+
+        body[data-panel-type="iot"] .iot-user-btn {
+          width: 34px;
+          height: 34px;
+        }
+
+        body[data-panel-type="iot"] .iot-user-icon {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
       @media (max-width: 480px) {
         .page {
           padding: 14px 10px 28px;
@@ -1131,15 +1187,16 @@
 
         .panel-header {
           gap: 10px;
+          grid-template-columns: 1fr minmax(180px, 1fr) 1fr;
         }
 
         .panel-bottom {
           grid-template-columns: repeat(5, minmax(0, 1fr));
-          gap: 10px;
+          gap: 8px;
         }
 
         .lcd {
-          max-width: 220px;
+          max-width: 200px;
           min-width: 0;
           width: 100%;
           height: 58px;
@@ -1157,6 +1214,15 @@
           width: 120px;
           height: 42px;
           font-size: 11px;
+        }
+
+        .btn-eco .eco-note {
+          white-space: nowrap;
+        }
+
+        .btn-eco .eco-text {
+          align-items: center;
+          text-align: center;
         }
 
         .btn-hot,
@@ -1180,14 +1246,6 @@
           gap: 8px;
         }
 
-        body[data-panel-type="iot"] .lcd {
-          min-width: 0;
-          width: 100%;
-          max-width: 240px;
-          height: 58px;
-          font-size: clamp(18px, 5.4vw, 28px);
-        }
-
         body[data-panel-type="iot"] .btn-minus,
         body[data-panel-type="iot"] .btn-plus {
           width: 40px;
@@ -1196,34 +1254,44 @@
         }
 
         body[data-panel-type="iot"] .btn-eco {
-          height: 40px;
-          width: 104px;
+          height: 42px;
+          width: 124px;
           font-size: 10px;
         }
 
         body[data-panel-type="iot"] .panel-status {
-          grid-template-columns: minmax(0, 1fr) auto auto auto minmax(0, 1fr);
-          column-gap: 8px;
-        }
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            column-gap: 8px;
+          }
 
-        body[data-panel-type="iot"] .panel-status .lamp-row {
-          grid-column: 4;
+          body[data-panel-type="iot"] .panel-status .lamp-row {
+            grid-column: 1;
+            justify-self: end;
+            align-self: center;
+            gap: 6px;
+          }
+
+          body[data-panel-type="iot"] .panel-status .btn-eco {
+            grid-column: 2;
+            justify-self: center;
+            align-self: center;
+          }
+
+        body[data-panel-type="iot"] .panel-status .iot-users {
+          grid-column: 3;
           justify-self: start;
           align-self: center;
-          gap: 6px;
-        }
-
-        body[data-panel-type="iot"] .panel-status .btn-eco {
-          grid-column: 3;
-          justify-self: center;
-          align-self: center;
+          gap: 4px;
         }
 
         body[data-panel-type="iot"] .panel-status .iot-users {
-          grid-column: 5;
-          justify-self: end;
-          align-self: center;
+          display: grid !important;
+          grid-template-columns: repeat(2, 34px);
+          grid-auto-rows: 34px;
           gap: 4px;
+          height: auto;
+          align-content: center;
+          justify-content: center;
         }
 
         body[data-panel-type="iot"] .lamp-item-eco .lamp,
@@ -1233,13 +1301,13 @@
         }
 
         body[data-panel-type="iot"] .iot-user-btn {
-          width: 22px;
-          height: 22px;
+          width: 34px;
+          height: 34px;
         }
 
         body[data-panel-type="iot"] .iot-user-icon {
-          width: 11px;
-          height: 11px;
+          width: 16px;
+          height: 16px;
         }
 
         body[data-panel-type="iot"] .panel-bottom {
@@ -1305,45 +1373,25 @@
           gap: 18px;
         }
         .panel-wrap {
-          transform: scale(0.92);
+          transform: none;
         }
 
         .panel-bottom {
           grid-template-columns: repeat(5, minmax(0, 1fr));
         }
 
-        body[data-panel-type="iot"] .panel-status {
-          grid-template-areas: "lamp eco users";
-          column-gap: 6px;
-        }
-
-        body[data-panel-type="iot"] .panel-status .lamp-row {
-          justify-self: start;
-          align-self: center;
-        }
-
-        body[data-panel-type="iot"] .panel-status .btn-eco {
-          justify-self: center;
-          align-self: center;
-        }
-
-        body[data-panel-type="iot"] .panel-status .iot-users {
-          justify-self: end;
-          align-self: center;
-        }
-
         body[data-panel-type="iot"] .btn-eco {
-          width: 104px;
+          width: 124px;
         }
 
         body[data-panel-type="iot"] .iot-user-btn {
-          width: 22px;
-          height: 22px;
+          width: 34px;
+          height: 34px;
         }
 
         body[data-panel-type="iot"] .iot-user-icon {
-          width: 11px;
-          height: 11px;
+          width: 16px;
+          height: 16px;
         }
 
         .lamp-item-eco .lamp,
@@ -1357,25 +1405,63 @@
         }
       }
 
-      @media (max-width: 380px) {
-        body[data-panel-type="iot"] .panel-status {
-          grid-template-columns: minmax(0, 1fr) auto auto minmax(0, 1fr);
-          column-gap: 6px;
+      @container panel (max-width: 380px) {
+        .panel-header {
+          gap: 10px;
         }
 
-        body[data-panel-type="iot"] .panel-status .lamp-row {
-          grid-column: 2;
-          justify-self: center;
+        .lcd {
+          max-width: 190px;
+          height: 54px;
+          font-size: clamp(17px, 5.2vw, 26px);
         }
 
-        body[data-panel-type="iot"] .panel-status .btn-eco {
-          grid-column: 3;
-          justify-self: center;
+        .btn-minus,
+        .btn-plus {
+          width: 40px;
+          height: 40px;
+          font-size: 20px;
         }
 
-        body[data-panel-type="iot"] .panel-status .iot-users {
-          grid-column: 4;
-          justify-self: end;
+        .btn-eco {
+          width: 108px;
+          height: 40px;
+          font-size: 10px;
+        }
+
+        .panel-bottom {
+          gap: 8px;
+        }
+
+        .btn-hot,
+        .btn-warm,
+        .btn-cold,
+        .btn-room,
+        .btn-milk {
+          height: 58px;
+        }
+
+        .btn-icon {
+          width: 22px;
+          height: 22px;
+        }
+
+        .btn-label {
+          font-size: 9px;
+        }
+
+        body[data-panel-type="iot"] .iot-users {
+          max-width: 120px;
+        }
+
+        body[data-panel-type="iot"] .iot-user-btn {
+          width: 34px;
+          height: 34px;
+        }
+
+        body[data-panel-type="iot"] .iot-user-icon {
+          width: 16px;
+          height: 16px;
         }
       }
     </style>
