@@ -873,6 +873,20 @@
         .btn-label {
           font-size: 10px;
         }
+
+        .lamp-item-eco .lamp {
+          width: 12px;
+          height: 12px;
+        }
+
+        .lamp-item-eco .lamp-icon {
+          width: 14px;
+          height: 14px;
+        }
+
+        .lamp-item-lock {
+          margin-left: -6px;
+        }
       }
 
       @media (min-width: 900px) and (min-height: 900px) {
@@ -911,6 +925,20 @@
         .panel-status .lamp-row {
           transform: translate(70px, -50%);
         }
+
+        .lamp-item-eco .lamp {
+          width: 11px;
+          height: 11px;
+        }
+
+        .lamp-item-eco .lamp-icon {
+          width: 13px;
+          height: 13px;
+        }
+
+        .lamp-item-lock {
+          margin-left: -8px;
+        }
       }
     </style>
   </head>
@@ -948,7 +976,7 @@
                 </span>
               </button>
               <div class="lamp-row">
-                <div class="lamp-item">
+                <div class="lamp-item lamp-item-eco">
                   <span class="lamp eco" id="lamp-eco" aria-hidden="true"></span>
                   <span class="lamp-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -958,7 +986,7 @@
                     </svg>
                   </span>
                 </div>
-                <div class="lamp-item">
+                <div class="lamp-item lamp-item-lock">
                   <span class="lamp lock" id="lamp-lock" aria-hidden="true"></span>
                   <span class="lamp-icon lock-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
