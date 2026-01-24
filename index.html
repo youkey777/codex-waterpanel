@@ -153,7 +153,7 @@
       .panel-status .lamp-row {
         position: static;
         transform: none;
-        justify-self: start;
+        justify-self: end;
       }
 
       .lcd {
@@ -1079,7 +1079,7 @@
 
       @media (max-width: 480px) {
         .page {
-          padding: 12px 8px 24px;
+          padding: 14px 10px 28px;
         }
 
         .panel-tabs {
@@ -1095,27 +1095,8 @@
           gap: 12px;
         }
 
-        .lcd {
-          min-width: 200px;
-          height: 54px;
-          font-size: clamp(18px, 5.4vw, 28px);
-        }
-
-        .btn-minus,
-        .btn-plus {
-          width: 44px;
-          height: 44px;
-          font-size: 22px;
-        }
-
-        .btn-eco {
-          height: 42px;
-          width: 112px;
-          font-size: 10px;
-        }
-
         .panel-bottom {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-template-columns: repeat(5, minmax(0, 1fr));
         }
 
         .btn-hot,
@@ -1135,17 +1116,58 @@
           font-size: 10px;
         }
 
-        .iot-users {
+        body[data-panel-type="iot"] .panel-header {
+          gap: 10px;
+        }
+
+        body[data-panel-type="iot"] .lcd {
+          min-width: 0;
+          width: 100%;
+          max-width: 220px;
+          height: 54px;
+          font-size: clamp(18px, 5.4vw, 28px);
+        }
+
+        body[data-panel-type="iot"] .btn-minus,
+        body[data-panel-type="iot"] .btn-plus {
+          width: 44px;
+          height: 44px;
+          font-size: 22px;
+        }
+
+        body[data-panel-type="iot"] .btn-eco {
+          height: 42px;
+          width: 108px;
+          font-size: 10px;
+        }
+
+        body[data-panel-type="iot"] .panel-status {
+          grid-template-columns: minmax(0, 0.9fr) auto minmax(0, 1.1fr);
+          column-gap: 8px;
+        }
+
+        body[data-panel-type="iot"] .panel-status .lamp-row {
+          justify-self: start;
+          gap: 10px;
+        }
+
+        body[data-panel-type="iot"] .lamp-item-eco .lamp,
+        body[data-panel-type="iot"] .lamp-item-lock .lamp {
+          width: 11px;
+          height: 11px;
+        }
+
+        body[data-panel-type="iot"] .iot-users {
           gap: 4px;
           justify-self: end;
         }
 
-        .iot-user-btn {
+        body[data-panel-type="iot"] .iot-user-btn {
           width: 24px;
           height: 24px;
         }
 
-        .iot-user-icon {
+        body[data-panel-type="iot"] .iot-user-icon {
           width: 12px;
           height: 12px;
         }
@@ -1160,14 +1182,6 @@
           margin-left: -6px;
         }
 
-        .panel-status {
-          grid-template-columns: minmax(0, 0.9fr) auto minmax(0, 1.1fr);
-          column-gap: 8px;
-        }
-
-        .panel-status .lamp-row {
-          justify-self: start;
-        }
       }
 
       @media (min-width: 900px) and (min-height: 900px) {
@@ -1183,7 +1197,7 @@
 
       @media (max-width: 420px) {
         .page {
-          padding: 10px 6px 20px;
+          padding: 12px 8px 24px;
           gap: 18px;
         }
 
@@ -1200,27 +1214,27 @@
           gap: 18px;
         }
         .panel-wrap {
-          transform: none;
+          transform: scale(0.92);
         }
 
         .panel-bottom {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-template-columns: repeat(5, minmax(0, 1fr));
         }
 
-        .panel-status {
+        body[data-panel-type="iot"] .panel-status {
           column-gap: 6px;
         }
 
-        .btn-eco {
+        body[data-panel-type="iot"] .btn-eco {
           width: 104px;
         }
 
-        .iot-user-btn {
+        body[data-panel-type="iot"] .iot-user-btn {
           width: 22px;
           height: 22px;
         }
 
-        .iot-user-icon {
+        body[data-panel-type="iot"] .iot-user-icon {
           width: 11px;
           height: 11px;
         }
@@ -2326,3 +2340,9 @@
     </script>
   </body>
 </html>
+        body[data-panel-type="iot"] .page {
+          padding: 12px 8px 24px;
+        }
+        body[data-panel-type="iot"] .page {
+          padding: 10px 6px 20px;
+        }
