@@ -1190,6 +1190,12 @@
           grid-template-columns: 1fr minmax(180px, 1fr) 1fr;
         }
 
+        .panel-status {
+          grid-template-columns: clamp(84px, 26vw, 120px) auto clamp(84px, 26vw, 120px);
+          column-gap: 8px;
+          max-width: 100%;
+        }
+
         .panel-bottom {
           grid-template-columns: repeat(5, minmax(0, 1fr));
           gap: 8px;
@@ -1260,8 +1266,9 @@
         }
 
         body[data-panel-type="iot"] .panel-status {
-            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            grid-template-columns: clamp(84px, 26vw, 120px) auto clamp(84px, 26vw, 120px);
             column-gap: 8px;
+            max-width: 100%;
           }
 
           body[data-panel-type="iot"] .panel-status .lamp-row {
@@ -1338,7 +1345,7 @@
         }
 
         .lamp-item-lock {
-          margin-left: -6px;
+          margin-right: -6px;
         }
 
       }
@@ -1384,6 +1391,60 @@
           width: 124px;
         }
 
+        body[data-panel-type="iot"] .lcd {
+          --lcd-value-left: 54px;
+          --lcd-value-right: 92px;
+          padding-right: 76px;
+        }
+
+        body[data-panel-type="iot"] .lcd-unit {
+          right: 70px;
+          bottom: 6px;
+          font-size: 0.7em;
+        }
+
+        body[data-panel-type="iot"] .lcd-weather {
+          right: 4px;
+          gap: 4px;
+          grid-template-columns: repeat(2, 18px);
+          grid-template-rows: repeat(2, 18px);
+        }
+
+        body[data-panel-type="iot"] .iot-icon {
+          width: 18px;
+          height: 18px;
+        }
+
+        body[data-panel-type="iot"] .iot-icon[data-weather="cloud"],
+        body[data-panel-type="iot"] .iot-icon[data-weather="snow"] {
+          width: 22px;
+          height: 22px;
+        }
+
+        body[data-panel-type="iot"] .iot-icon[data-weather="cloud"],
+        body[data-panel-type="iot"] .iot-icon[data-weather="snow"] {
+          margin-top: -4px;
+        }
+
+        body[data-panel-type="iot"] .iot-icon[data-weather="rain"] {
+          width: 20px;
+          height: 20px;
+        }
+
+        body[data-panel-type="iot"] .iot-thermo {
+          width: 16px;
+          height: 22px;
+        }
+
+        body[data-panel-type="iot"] .lcd-thermo.left {
+          left: 8px;
+        }
+
+        body[data-panel-type="iot"] .lcd-thermo.mid {
+          left: 50%;
+          bottom: 4px;
+        }
+
         body[data-panel-type="iot"] .iot-user-btn {
           width: 34px;
           height: 34px;
@@ -1401,7 +1462,7 @@
         }
 
         .lamp-item-lock {
-          margin-left: -8px;
+          margin-right: -8px;
         }
       }
 
@@ -1462,6 +1523,60 @@
         body[data-panel-type="iot"] .iot-user-icon {
           width: 16px;
           height: 16px;
+        }
+
+        body[data-panel-type="iot"] .lcd {
+          --lcd-value-left: 54px;
+          --lcd-value-right: 92px;
+          padding-right: 76px;
+        }
+
+        body[data-panel-type="iot"] .lcd-unit {
+          right: 70px;
+          bottom: 6px;
+          font-size: 0.7em;
+        }
+
+        body[data-panel-type="iot"] .lcd-weather {
+          right: 4px;
+          gap: 4px;
+          grid-template-columns: repeat(2, 18px);
+          grid-template-rows: repeat(2, 18px);
+        }
+
+        body[data-panel-type="iot"] .iot-icon {
+          width: 18px;
+          height: 18px;
+        }
+
+        body[data-panel-type="iot"] .iot-icon[data-weather="cloud"],
+        body[data-panel-type="iot"] .iot-icon[data-weather="snow"] {
+          width: 22px;
+          height: 22px;
+        }
+
+        body[data-panel-type="iot"] .iot-icon[data-weather="cloud"],
+        body[data-panel-type="iot"] .iot-icon[data-weather="snow"] {
+          margin-top: -4px;
+        }
+
+        body[data-panel-type="iot"] .iot-icon[data-weather="rain"] {
+          width: 20px;
+          height: 20px;
+        }
+
+        body[data-panel-type="iot"] .iot-thermo {
+          width: 16px;
+          height: 22px;
+        }
+
+        body[data-panel-type="iot"] .lcd-thermo.left {
+          left: 8px;
+        }
+
+        body[data-panel-type="iot"] .lcd-thermo.mid {
+          left: 50%;
+          bottom: 4px;
         }
       }
     </style>
@@ -1541,16 +1656,6 @@
                 </span>
               </button>
               <div class="lamp-row">
-                <div class="lamp-item lamp-item-eco">
-                  <span class="lamp eco" id="lamp-eco" aria-hidden="true"></span>
-                  <span class="lamp-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M12 2a6.5 6.5 0 0 0-3.9 11.7L9 16v2h6v-2l0.9-2.3A6.5 6.5 0 0 0 12 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
-                      <path d="M9.5 21h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                      <path d="M10 18h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                    </svg>
-                  </span>
-                </div>
                 <div class="lamp-item lamp-item-lock">
                   <span class="lamp lock" id="lamp-lock" aria-hidden="true"></span>
                   <span class="lamp-icon lock-icon" aria-hidden="true">
@@ -1558,6 +1663,16 @@
                       <rect x="6" y="10" width="12" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2" />
                       <path d="M16.5 10V6a4 4 0 0 0-7.5-2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                       <path d="M16.5 10l2.2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                </div>
+                <div class="lamp-item lamp-item-eco">
+                  <span class="lamp eco" id="lamp-eco" aria-hidden="true"></span>
+                  <span class="lamp-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 2a6.5 6.5 0 0 0-3.9 11.7L9 16v2h6v-2l0.9-2.3A6.5 6.5 0 0 0 12 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                      <path d="M9.5 21h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                      <path d="M10 18h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     </svg>
                   </span>
                 </div>
