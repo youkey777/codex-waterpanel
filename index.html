@@ -8,7 +8,7 @@
     />
     <title>ウォーターサーバー操作パネル デモ</title>
     <style>
-:root {
+      :root {
         --lcd-green: #00ff66;
         --lcd-dim: rgba(0, 255, 102, 0.3);
         --lock-red: #ff3b30;
@@ -39,6 +39,39 @@
         flex-direction: column;
         gap: 24px;
         align-items: center;
+      }
+
+      .panel-tabs {
+        width: min(100%, var(--panel-max));
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .tab-button {
+        border: 2px solid rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85);
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      .tab-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+      }
+
+      .tab-button.is-active {
+        background: #f7f7f7;
+        color: #1b1f27;
+        border-color: #d0d0d0;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
       }
 
       .main-view {
@@ -141,6 +174,7 @@
         justify-content: center;
         border: 1px solid #2b2b2b;
         box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6);
+        position: relative;
       }
 
       .lcd.off {
@@ -159,7 +193,14 @@
       }
 
       .lcd-unit {
-        font-size: 0.8em;
+        position: absolute;
+        right: 12px;
+        bottom: 8px;
+        font-size: 0.75em;
+        font-family: "Segoe UI", sans-serif;
+        letter-spacing: 0.02em;
+        color: #c7c7c7;
+        text-shadow: none;
       }
 
       .lcd-value,
@@ -167,14 +208,137 @@
         line-height: 1;
       }
 
-      .lcd-unit.hidden {
-        display: none;
+      .lcd-value {
+        letter-spacing: 0.32em;
       }
 
-      .lcd.unit-only .lcd-unit {
-        font-size: 1em;
-        color: var(--lcd-green);
-        text-shadow: 0 0 12px rgba(0, 255, 102, 0.8);
+
+      .lcd-weather {
+        position: absolute;
+        right: 10px;
+        top: 8px;
+        bottom: 8px;
+        display: none;
+        grid-template-columns: repeat(2, 18px);
+        grid-template-rows: repeat(2, 18px);
+        gap: 6px;
+        align-content: center;
+        justify-content: center;
+        opacity: 0.75;
+        pointer-events: none;
+      }
+
+      .lcd-thermo {
+        position: absolute;
+        bottom: 6px;
+        display: none;
+        align-items: center;
+        gap: 8px;
+        opacity: 0.75;
+        pointer-events: none;
+      }
+
+      .lcd-thermo.left {
+        left: 8px;
+      }
+
+      .lcd-thermo.mid {
+        left: 46%;
+        transform: translateX(-50%);
+      }
+
+      .iot-icon {
+        width: 18px;
+        height: 18px;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .iot-thermo {
+        width: 20px;
+        height: 26px;
+      }
+
+      .iot-users {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(220px, -50%);
+      }
+
+      .iot-only {
+        display: none !important;
+      }
+
+      body[data-panel-type="iot"] .iot-only {
+        display: flex !important;
+      }
+
+      body[data-panel-type="iot"] .lcd-weather {
+        display: grid !important;
+      }
+
+      body[data-panel-type="iot"] .lcd-thermo {
+        display: flex !important;
+      }
+
+      body[data-panel-type="iot"] .iot-users {
+        display: flex !important;
+      }
+
+      body[data-panel-type="iot"] .lcd {
+        --lcd-value-left: 48px;
+        --lcd-value-right: 96px;
+        min-width: 290px;
+        padding-right: 74px;
+      }
+
+      body[data-panel-type="iot"] .lcd-unit {
+        right: 58px;
+        bottom: 10px;
+      }
+
+      body[data-panel-type="iot"] .lcd-value {
+        position: absolute;
+        left: var(--lcd-value-left);
+        right: var(--lcd-value-right);
+        text-align: center;
+      }
+
+      body[data-panel-type="iot"] .lcd-thermo.mid {
+        left: calc(var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 - 4px);
+        bottom: 4px;
+        transform: translateX(-50%);
+      }
+
+      .iot-user-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 2px solid #d5d5d5;
+        background: #f2f2f2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .iot-user-btn .badge {
+        position: absolute;
+        top: 2px;
+        right: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #8a8a8a;
+      }
+
+      .iot-user-icon {
+        width: 20px;
+        height: 20px;
+        color: #b0b0b0;
       }
 
       .lamp-row {
@@ -841,6 +1005,15 @@
           padding: 14px 10px 28px;
         }
 
+        .panel-tabs {
+          gap: 10px;
+        }
+
+        .tab-button {
+          font-size: 14px;
+          padding: 12px 10px;
+        }
+
         .lcd {
           min-width: 230px;
           height: 58px;
@@ -874,6 +1047,21 @@
           font-size: 10px;
         }
 
+        .iot-users {
+          gap: 6px;
+          transform: translate(160px, -50%);
+        }
+
+        .iot-user-btn {
+          width: 30px;
+          height: 30px;
+        }
+
+        .iot-user-icon {
+          width: 16px;
+          height: 16px;
+        }
+
         .lamp-item-eco .lamp,
         .lamp-item-lock .lamp {
           width: 12px;
@@ -902,6 +1090,10 @@
           gap: 18px;
         }
 
+        .panel-tabs {
+          gap: 8px;
+        }
+
         .panel-surface {
           padding: 12px;
           gap: 14px;
@@ -922,6 +1114,10 @@
           transform: translate(70px, -50%);
         }
 
+        .iot-users {
+          transform: translate(120px, -50%);
+        }
+
         .lamp-item-eco .lamp,
         .lamp-item-lock .lamp {
           width: 11px;
@@ -932,58 +1128,9 @@
           margin-left: -8px;
         }
       }
-      .panel-tabs {
-        width: min(100%, var(--panel-max));
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin-bottom: 18px;
-      }
-
-      .tab-button {
-        border: 2px solid rgba(255, 255, 255, 0.22);
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.85);
-        border-radius: 14px;
-        padding: 14px 16px;
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-      }
-
-      .tab-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-      }
-
-      .tab-button.is-active {
-        background: #f7f7f7;
-        color: #1b1f27;
-        border-color: #d0d0d0;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      }
-
-      @media (max-width: 480px) {
-        .panel-tabs {
-          gap: 10px;
-        }
-
-        .tab-button {
-          font-size: 14px;
-          padding: 12px 10px;
-        }
-      }
-
-      @media (max-width: 420px) {
-        .panel-tabs {
-          gap: 8px;
-        }
-      }
     </style>
   </head>
-  <body>
+  <body data-panel-type="normal">
     <div class="page">
       <div class="panel-tabs" role="tablist" aria-label="操作パネル切替">
         <button class="tab-button is-active" type="button" role="tab" aria-selected="true" data-tab="normal">ノーマル</button>
@@ -1002,6 +1149,41 @@
               <div class="lcd dim" id="lcd">
                 <span class="lcd-value" id="lcd-value">----</span>
                 <span class="lcd-unit" id="lcd-unit">ml</span>
+                <div class="lcd-thermo left iot-only" aria-hidden="true">
+                  <svg class="iot-thermo" viewBox="0 0 24 24">
+                    <rect x="10" y="3" width="4" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2" />
+                    <circle cx="12" cy="18" r="4" fill="none" stroke="currentColor" stroke-width="2" />
+                    <path d="M12 7v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                </div>
+                <div class="lcd-thermo mid iot-only" aria-hidden="true">
+                  <svg class="iot-thermo" viewBox="0 0 24 24">
+                    <rect x="10" y="3" width="4" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2" />
+                    <circle cx="12" cy="18" r="4" fill="none" stroke="currentColor" stroke-width="2" />
+                    <path d="M12 10v5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                </div>
+                <div class="lcd-weather iot-only" aria-hidden="true">
+                  <svg class="iot-icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2" />
+                    <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.5 4.5l2.2 2.2M17.3 17.3l2.2 2.2M4.5 19.5l2.2-2.2M17.3 6.7l2.2-2.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                  <svg class="iot-icon" viewBox="0 0 24 24">
+                    <path d="M4 12a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path d="M4 12c2 2 4 2 6 0c2 2 4 2 6 0c2 2 4 2 6 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path d="M12 12v5a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                  <svg class="iot-icon" viewBox="0 0 24 24">
+                    <path d="M6 14a4 4 0 0 1 7.6-1.8A3.5 3.5 0 1 1 16 19H7a3 3 0 0 1-1-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                  <svg class="iot-icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="2" />
+                    <circle cx="12" cy="15" r="4" fill="none" stroke="currentColor" stroke-width="2" />
+                    <circle cx="11" cy="7" r="0.6" fill="currentColor" />
+                    <circle cx="13" cy="7" r="0.6" fill="currentColor" />
+                    <path d="M12 10v2M12 13v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                </div>
               </div>
               <button class="btn btn-plus" data-action="plus" aria-label="量を増やす">+</button>
             </div>
@@ -1040,6 +1222,36 @@
                       <path d="M16.5 10l2.2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     </svg>
                   </span>
+                </div>
+              </div>
+              <div class="iot-users iot-only" aria-hidden="true">
+                <div class="iot-user-btn">
+                  <span class="badge">1</span>
+                  <svg class="iot-user-icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="4" fill="currentColor" />
+                    <path d="M4 20c1.5-4 6-6 8-6s6.5 2 8 6" fill="currentColor" />
+                  </svg>
+                </div>
+                <div class="iot-user-btn">
+                  <span class="badge">2</span>
+                  <svg class="iot-user-icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="4" fill="currentColor" />
+                    <path d="M4 20c1.5-4 6-6 8-6s6.5 2 8 6" fill="currentColor" />
+                  </svg>
+                </div>
+                <div class="iot-user-btn">
+                  <span class="badge">3</span>
+                  <svg class="iot-user-icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="4" fill="currentColor" />
+                    <path d="M4 20c1.5-4 6-6 8-6s6.5 2 8 6" fill="currentColor" />
+                  </svg>
+                </div>
+                <div class="iot-user-btn">
+                  <span class="badge">4</span>
+                  <svg class="iot-user-icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="4" fill="currentColor" />
+                    <path d="M4 20c1.5-4 6-6 8-6s6.5 2 8 6" fill="currentColor" />
+                  </svg>
                 </div>
               </div>
             </div>
@@ -1286,9 +1498,10 @@
       const spoutTray = document.getElementById("spout-tray");
 
       const buttons = document.querySelectorAll(".btn");
+      const tabButtons = document.querySelectorAll(".tab-button");
       const rulesToggle = document.querySelector(".rules-toggle");
       const rulesContent = document.getElementById("rules-content");
-      const tabButtons = document.querySelectorAll(".tab-button");
+
       let currentTab = "normal";
 
       function setActiveTab(tabName) {
@@ -1309,7 +1522,7 @@
         });
       });
 
-      setActiveTab(currentTab);
+      setActiveTab("normal");
 
       if (rulesToggle && rulesContent) {
         rulesToggle.addEventListener("click", () => {
@@ -1344,10 +1557,15 @@
 
       function updateLCD() {
         const hasAmount = state.amount !== null;
-        lcdValue.textContent = hasAmount ? state.amount : "";
+        if (hasAmount) {
+          const amountText = String(state.amount);
+          const padded = amountText.padStart(4, "\u00A0");
+          lcdValue.textContent = padded;
+        } else {
+          lcdValue.textContent = "";
+        }
         lcd.classList.toggle("dim", !hasAmount);
         lcd.classList.toggle("off", !hasAmount);
-        lcdUnit.classList.toggle("hidden", !hasAmount);
       }
 
       function setLCDBlink(on) {
@@ -1364,16 +1582,10 @@
       }
 
       function blinkUnit() {
-        lcdUnit.classList.remove("hidden");
-        lcd.classList.add("unit-only");
-        lcdUnit.classList.add("blink");
+        lcdValue.classList.add("blink");
         clearTimeout(state.timers.blink);
         state.timers.blink = setTimeout(() => {
-          lcdUnit.classList.remove("blink");
-          lcd.classList.remove("unit-only");
-          if (state.amount === null) {
-            lcdUnit.classList.add("hidden");
-          }
+          lcdValue.classList.remove("blink");
         }, 2000);
       }
 
