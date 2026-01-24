@@ -1117,59 +1117,88 @@
         }
 
         body[data-panel-type="iot"] .panel-header {
-          gap: 10px;
+          gap: 8px;
         }
 
         body[data-panel-type="iot"] .lcd {
           min-width: 0;
           width: 100%;
-          max-width: 220px;
-          height: 54px;
-          font-size: clamp(18px, 5.4vw, 28px);
+          max-width: 200px;
+          height: 52px;
+          font-size: clamp(17px, 5.2vw, 26px);
         }
 
         body[data-panel-type="iot"] .btn-minus,
         body[data-panel-type="iot"] .btn-plus {
-          width: 44px;
-          height: 44px;
-          font-size: 22px;
+          width: 40px;
+          height: 40px;
+          font-size: 20px;
         }
 
         body[data-panel-type="iot"] .btn-eco {
-          height: 42px;
-          width: 108px;
+          height: 40px;
+          width: 104px;
           font-size: 10px;
         }
 
         body[data-panel-type="iot"] .panel-status {
           grid-template-columns: minmax(0, 0.9fr) auto minmax(0, 1.1fr);
+          grid-template-areas: "lamp eco users";
           column-gap: 8px;
         }
 
         body[data-panel-type="iot"] .panel-status .lamp-row {
+          grid-area: lamp;
           justify-self: start;
-          gap: 10px;
+          gap: 8px;
+        }
+
+        body[data-panel-type="iot"] .panel-status .btn-eco {
+          grid-area: eco;
+          justify-self: center;
+        }
+
+        body[data-panel-type="iot"] .panel-status .iot-users {
+          grid-area: users;
+          justify-self: end;
+          gap: 4px;
         }
 
         body[data-panel-type="iot"] .lamp-item-eco .lamp,
         body[data-panel-type="iot"] .lamp-item-lock .lamp {
+          width: 10px;
+          height: 10px;
+        }
+
+        body[data-panel-type="iot"] .iot-user-btn {
+          width: 22px;
+          height: 22px;
+        }
+
+        body[data-panel-type="iot"] .iot-user-icon {
           width: 11px;
           height: 11px;
         }
 
-        body[data-panel-type="iot"] .iot-users {
-          gap: 4px;
-          justify-self: end;
+        body[data-panel-type="iot"] .panel-bottom {
+          gap: 8px;
         }
 
-        body[data-panel-type="iot"] .iot-user-btn {
-          width: 24px;
-          height: 24px;
+        body[data-panel-type="iot"] .btn-hot,
+        body[data-panel-type="iot"] .btn-warm,
+        body[data-panel-type="iot"] .btn-cold,
+        body[data-panel-type="iot"] .btn-room,
+        body[data-panel-type="iot"] .btn-milk {
+          height: 58px;
         }
 
-        body[data-panel-type="iot"] .iot-user-icon {
-          width: 12px;
-          height: 12px;
+        body[data-panel-type="iot"] .btn-icon {
+          width: 22px;
+          height: 22px;
+        }
+
+        body[data-panel-type="iot"] .btn-label {
+          font-size: 9px;
         }
 
         .lamp-item-eco .lamp,
