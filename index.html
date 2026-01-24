@@ -155,7 +155,7 @@
 
       .lcd-value.blink,
       .lcd-unit.blink {
-        animation: blink 1s step-end infinite;
+        animation: blink 0.6s step-end infinite;
       }
 
       .lcd-unit {
@@ -289,6 +289,46 @@
         font-size: 12px;
         align-self: center;
         padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .eco-button-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        color: #bdbdbd;
+      }
+
+      .eco-button-icon svg,
+      .lamp-icon svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .lamp-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        color: #9d9d9d;
+      }
+
+      .lamp-icon.lock-icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      .eco-text {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: flex-start;
+        line-height: 1.1;
       }
 
       .btn-hot,
@@ -895,16 +935,38 @@
 
             <div class="panel-status">
               <button class="btn btn-eco" data-action="eco" aria-label="エコ切替">
-                ECO<span class="eco-note">/ キャンセル</span>
+                <span class="eco-button-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2a6.5 6.5 0 0 0-3.9 11.7L9 16v2h6v-2l0.9-2.3A6.5 6.5 0 0 0 12 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                    <path d="M9.5 21h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path d="M10 18h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                </span>
+                <span class="eco-text">
+                  <span>ECO</span>
+                  <span class="eco-note">/ キャンセル</span>
+                </span>
               </button>
               <div class="lamp-row">
                 <div class="lamp-item">
-                  <span class="lamp lock" id="lamp-lock" aria-hidden="true"></span>
-                  <span>LOCK</span>
+                  <span class="lamp eco" id="lamp-eco" aria-hidden="true"></span>
+                  <span class="lamp-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 2a6.5 6.5 0 0 0-3.9 11.7L9 16v2h6v-2l0.9-2.3A6.5 6.5 0 0 0 12 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                      <path d="M9.5 21h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                      <path d="M10 18h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                  </span>
                 </div>
                 <div class="lamp-item">
-                  <span class="lamp eco" id="lamp-eco" aria-hidden="true"></span>
-                  <span>ECO</span>
+                  <span class="lamp lock" id="lamp-lock" aria-hidden="true"></span>
+                  <span class="lamp-icon lock-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <rect x="6" y="10" width="12" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2" />
+                      <path d="M16.5 10V6a4 4 0 0 0-7.5-2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                      <path d="M16.5 10l2.2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                  </span>
                 </div>
               </div>
             </div>
@@ -1041,6 +1103,7 @@
           <h4>粉ミルク</h4>
           <ul>
             <li>ロック解除+量指定必須、60%温水→40%冷水</li>
+            <li>温水後の待機中は、温水/白湯/冷水/常温水を押しても液晶の量だけ点滅し、残りの冷水排出は粉ミルク（または冷水/常温水）で行われる</li>
             <li>2回目完了で液晶消去</li>
             <li>温水完了時は温水ランプ消え、再度ロック状態（ランプ消える事で冷水いけるの意味）</li>
           </ul>
@@ -1068,7 +1131,7 @@
         <div class="rule-section">
           <h4>ECO</h4>
           <ul>
-            <li>短押しでON/OFF、長押し1.5秒でキャンセル（液晶表示戻る、温水ロックかかる）</li>
+            <li>短押しでON/OFF、長押し1秒でキャンセル（液晶表示戻る、温水ロックかかる）</li>
           </ul>
         </div>
 
@@ -1093,7 +1156,7 @@
       const DISPENSE_DURATION = 3500;
       const DISPLAY_CLEAR_DELAY = 15000;
       const RELock_DELAY = 5000;
-      const ECO_HOLD_CANCEL = 1500;
+      const ECO_HOLD_CANCEL = 1000;
 
       const COLORS = {
         cold: "#6496FF",
@@ -1116,6 +1179,8 @@
         milkTotal: 0,
         unlockButton: null,
         unlockTriggered: false,
+        lockBlinkArmed: false,
+        lockBlinkPointerId: null,
         memory: {
           coldRoom: 150,
           hot: 150,
@@ -1129,6 +1194,7 @@
           dispense: null,
           relock: null,
           blink: null,
+          amountBlink: null,
           displayClear: null,
           overflow: null,
           lampBlink: null
@@ -1193,6 +1259,15 @@
         lcdValue.classList.toggle("blink", on);
       }
 
+      function blinkAmountValue() {
+        if (state.amount === null) return;
+        setLCDBlink(true);
+        clearTimeout(state.timers.amountBlink);
+        state.timers.amountBlink = setTimeout(() => {
+          setLCDBlink(false);
+        }, 1200);
+      }
+
       function blinkUnit() {
         lcdUnit.classList.remove("hidden");
         lcd.classList.add("unit-only");
@@ -1216,6 +1291,7 @@
         const keepAmount = options.keepAmount === true;
         state.isLocked = on;
         lampLock.classList.toggle("on", !on);
+        lampLock.classList.remove("attention");
         if (on) {
           if (state.unlockButton && !keepAmount) {
             clearAmount();
@@ -1243,6 +1319,7 @@
 
       function blinkLockLamp() {
         if (!lampLock) return;
+        if (!state.isLocked) return;
         lampLock.classList.remove("attention");
         void lampLock.offsetWidth;
         lampLock.classList.add("attention");
@@ -1410,6 +1487,10 @@
           cancelDispensing();
           return;
         }
+        if (state.milkPhase === 1 && !state.isDispensing) {
+          blinkAmountValue();
+          return;
+        }
         if (state.amount === null) {
           setAmount(getMemoryBase());
           return;
@@ -1449,16 +1530,35 @@
         }
 
         const isHotGroup = type === "hot" || type === "warm" || type === "milk";
+        if (state.milkPhase === 1) {
+          if (type === "cold" || type === "room") {
+            blinkAmountValue();
+            state.pendingAction = "milk";
+            return;
+          }
+          if (type === "hot" || type === "warm") {
+            blinkAmountValue();
+            return;
+          }
+          if (type === "milk") {
+            state.pendingAction = "milk";
+            return;
+          }
+        }
         if (isHotGroup && state.isLocked && !(type === "milk" && state.milkPhase === 1)) {
           blinkLockLamp();
           return;
         }
         if (!state.isLocked && state.unlockButton && isHotGroup && type !== state.unlockButton) {
+          state.lockBlinkArmed = false;
+          state.lockBlinkPointerId = null;
           setLock(true);
           clearAmount();
           return;
         }
         if (!state.isLocked && state.unlockButton && !isHotGroup && state.amount !== null) {
+          state.lockBlinkArmed = false;
+          state.lockBlinkPointerId = null;
           setLock(true);
           clearAmount();
           return;
@@ -1492,6 +1592,12 @@
         state.pendingAction = null;
 
         if (type === "milk") {
+          if (state.milkPhase === 1) {
+            startDispensing("milkCold", "auto", state.milkTotal * 0.4, true);
+            state.milkPhase = 0;
+            state.milkTotal = 0;
+            return;
+          }
           if (state.amount === null) {
             blinkUnit();
             return;
@@ -1501,12 +1607,6 @@
             rememberAmount("milk", state.amount);
             startDispensing("milkWarm", "auto", state.amount * 0.6, true);
             state.milkPhase = 1;
-            return;
-          }
-          if (state.milkPhase === 1) {
-            startDispensing("milkCold", "auto", state.milkTotal * 0.4, true);
-            state.milkPhase = 0;
-            state.milkTotal = 0;
             return;
           }
         }
@@ -1568,6 +1668,18 @@
           if (action === "hot" || action === "warm" || action === "milk") {
             button.addEventListener("pointerdown", (event) => {
               event.preventDefault();
+              if (state.milkPhase === 1 && (action === "hot" || action === "warm")) {
+                blinkAmountValue();
+                state.lockBlinkArmed = false;
+                state.lockBlinkPointerId = null;
+                return;
+              }
+              if (state.milkPhase === 1 && action === "milk") {
+                beginDispensePress(action);
+                return;
+              }
+              state.lockBlinkArmed = true;
+              state.lockBlinkPointerId = event.pointerId;
               if (state.isDispensing && state.dispenseMode === "auto") {
                 cancelDispensing();
                 return;
@@ -1587,19 +1699,33 @@
                 unlockHot(action);
               }, UNLOCK_HOLD);
             });
-            button.addEventListener("pointerup", () => {
+            button.addEventListener("pointerup", (event) => {
               clearTimeout(state.timers.unlock);
-              if (state.isLocked && !state.unlockTriggered) {
+              if (
+                state.isLocked &&
+                !state.unlockTriggered &&
+                state.lockBlinkArmed &&
+                state.lockBlinkPointerId === event.pointerId
+              ) {
                 blinkLockLamp();
               }
+              state.lockBlinkArmed = false;
+              state.lockBlinkPointerId = null;
               endDispensePress();
               startQueuedDispense();
             });
-            button.addEventListener("pointerleave", () => {
+            button.addEventListener("pointerleave", (event) => {
               clearTimeout(state.timers.unlock);
-              if (state.isLocked && !state.unlockTriggered) {
+              if (
+                state.isLocked &&
+                !state.unlockTriggered &&
+                state.lockBlinkArmed &&
+                state.lockBlinkPointerId === event.pointerId
+              ) {
                 blinkLockLamp();
               }
+              state.lockBlinkArmed = false;
+              state.lockBlinkPointerId = null;
               endDispensePress();
             });
             return;
