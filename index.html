@@ -137,23 +137,23 @@
       }
 
       .panel-status {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        position: relative;
+        display: flex;
+        justify-content: center;
         align-items: center;
-        column-gap: 12px;
         min-height: 56px;
         width: 100%;
       }
 
       .panel-status .btn-eco {
         z-index: 2;
-        justify-self: center;
       }
 
       .panel-status .lamp-row {
-        position: static;
-        transform: none;
-        justify-self: end;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(120px, -50%);
       }
 
       .lcd {
@@ -310,11 +310,11 @@
         display: none;
         align-items: center;
         gap: 8px;
-        position: static;
-        transform: none;
-        justify-self: end;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(220px, -50%);
         max-width: 100%;
-        flex-wrap: wrap;
       }
 
       .iot-only {
@@ -323,6 +323,43 @@
 
       body[data-panel-type="iot"] .iot-only {
         display: flex !important;
+      }
+
+      body[data-panel-type="iot"] .panel-status {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: center;
+        column-gap: 12px;
+      }
+
+      body[data-panel-type="iot"] .panel-status .btn-eco {
+        grid-column: 2;
+        justify-self: center;
+      }
+
+      body[data-panel-type="iot"] .panel-status .lamp-row {
+        grid-column: 3;
+        position: static;
+        transform: none;
+        justify-self: start;
+        gap: 10px;
+      }
+
+      body[data-panel-type="iot"] .panel-status .iot-users {
+        grid-column: 3;
+        position: static;
+        transform: none;
+        justify-self: end;
+        align-self: center;
+        display: flex;
+        align-items: center;
+        margin-top: -6px;
+      }
+
+      body[data-panel-type="iot"] .lamp-item-eco .lamp,
+      body[data-panel-type="iot"] .lamp-item-lock .lamp {
+        width: 9px;
+        height: 9px;
       }
 
       body[data-panel-type="iot"] .lcd-weather {
@@ -434,8 +471,8 @@
       }
 
       .lamp {
-        width: 14px;
-        height: 14px;
+        width: 9px;
+        height: 9px;
         border-radius: 50%;
         opacity: 1;
         background: #101216;
@@ -1149,25 +1186,28 @@
 
         body[data-panel-type="iot"] .panel-status .lamp-row {
           grid-area: lamp;
+          grid-column: 1;
           justify-self: start;
-          gap: 8px;
+          gap: 6px;
         }
 
         body[data-panel-type="iot"] .panel-status .btn-eco {
           grid-area: eco;
+          grid-column: 2;
           justify-self: center;
         }
 
         body[data-panel-type="iot"] .panel-status .iot-users {
           grid-area: users;
+          grid-column: 3;
           justify-self: end;
           gap: 4px;
         }
 
         body[data-panel-type="iot"] .lamp-item-eco .lamp,
         body[data-panel-type="iot"] .lamp-item-lock .lamp {
-          width: 10px;
-          height: 10px;
+          width: 9px;
+          height: 9px;
         }
 
         body[data-panel-type="iot"] .iot-user-btn {
@@ -1203,8 +1243,8 @@
 
         .lamp-item-eco .lamp,
         .lamp-item-lock .lamp {
-          width: 12px;
-          height: 12px;
+          width: 9px;
+          height: 9px;
         }
 
         .lamp-item-lock {
@@ -1251,7 +1291,20 @@
         }
 
         body[data-panel-type="iot"] .panel-status {
+          grid-template-areas: "lamp eco users";
           column-gap: 6px;
+        }
+
+        body[data-panel-type="iot"] .panel-status .lamp-row {
+          justify-self: start;
+        }
+
+        body[data-panel-type="iot"] .panel-status .btn-eco {
+          justify-self: center;
+        }
+
+        body[data-panel-type="iot"] .panel-status .iot-users {
+          justify-self: end;
         }
 
         body[data-panel-type="iot"] .btn-eco {
@@ -1270,8 +1323,8 @@
 
         .lamp-item-eco .lamp,
         .lamp-item-lock .lamp {
-          width: 11px;
-          height: 11px;
+          width: 9px;
+          height: 9px;
         }
 
         .lamp-item-lock {
@@ -2369,9 +2422,3 @@
     </script>
   </body>
 </html>
-        body[data-panel-type="iot"] .page {
-          padding: 12px 8px 24px;
-        }
-        body[data-panel-type="iot"] .page {
-          padding: 10px 6px 20px;
-        }
