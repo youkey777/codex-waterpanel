@@ -212,15 +212,35 @@
         letter-spacing: 0.32em;
       }
 
+      .lcd-temp {
+        position: absolute;
+        top: 50%;
+        font-size: 1em;
+        font-family: "Courier New", monospace;
+        letter-spacing: 0.32em;
+        color: var(--lcd-green);
+        text-shadow: 0 0 6px rgba(0, 255, 102, 0.45);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-50%);
+        text-align: center;
+        width: 4ch;
+        display: inline-block;
+      }
+
+      .lcd-temp.high,
+      .lcd-temp.low {
+        left: 50%;
+      }
 
       .lcd-weather {
         position: absolute;
-        right: 10px;
+        right: 4px;
         top: 8px;
         bottom: 8px;
         display: none;
-        grid-template-columns: repeat(2, 18px);
-        grid-template-rows: repeat(2, 18px);
+        grid-template-columns: repeat(2, 22px);
+        grid-template-rows: repeat(2, 22px);
         gap: 6px;
         align-content: center;
         justify-content: center;
@@ -239,7 +259,7 @@
       }
 
       .lcd-thermo.left {
-        left: 8px;
+        left: 26px;
       }
 
       .lcd-thermo.mid {
@@ -248,14 +268,42 @@
       }
 
       .iot-icon {
-        width: 18px;
-        height: 18px;
+        width: 22px;
+        height: 22px;
         color: rgba(255, 255, 255, 0.8);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .iot-icon[data-weather="cloud"],
+      .iot-icon[data-weather="snow"] {
+        width: 30px;
+        height: 30px;
+      }
+
+      .iot-icon[data-weather="cloud"] {
+        margin-top: -6px;
+      }
+
+      .iot-icon[data-weather="rain"],
+      .iot-icon[data-weather="snow"] {
+        margin-left: -3px;
+      }
+
+      .iot-icon[data-weather="snow"] {
+        margin-top: -6px;
+      }
+
+      .iot-icon[data-weather="rain"] {
+        width: 24px;
+        height: 24px;
       }
 
       .iot-thermo {
         width: 20px;
         height: 26px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
       }
 
       .iot-users {
@@ -307,10 +355,38 @@
         text-align: center;
       }
 
+      body[data-panel-type="iot"] .lcd-temp {
+        width: calc((100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2);
+      }
+
+      body[data-panel-type="iot"] .lcd-temp.high {
+        left: var(--lcd-value-left);
+      }
+
+      body[data-panel-type="iot"] .lcd-temp.low {
+        left: calc(var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2);
+      }
+
       body[data-panel-type="iot"] .lcd-thermo.mid {
-        left: calc(var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 - 4px);
+        left: calc(var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 - 10px);
         bottom: 4px;
         transform: translateX(-50%);
+      }
+
+      body[data-panel-type="iot"] .lcd.weather-active .iot-thermo {
+        opacity: 1;
+      }
+
+      body[data-panel-type="iot"] .lcd.weather-active .iot-icon.on {
+        opacity: 1;
+      }
+
+      body[data-panel-type="iot"] .lcd.weather-active .lcd-temp {
+        opacity: 0.9;
+      }
+
+      body[data-panel-type="iot"] .lcd.weather-active .lcd-thermo {
+        color: rgba(0, 255, 102, 0.9);
       }
 
       .iot-user-btn {
@@ -1149,6 +1225,8 @@
               <div class="lcd dim" id="lcd">
                 <span class="lcd-value" id="lcd-value">----</span>
                 <span class="lcd-unit" id="lcd-unit">ml</span>
+                <span class="lcd-temp high iot-only" id="temp-high" aria-hidden="true">--</span>
+                <span class="lcd-temp low iot-only" id="temp-low" aria-hidden="true">--</span>
                 <div class="lcd-thermo left iot-only" aria-hidden="true">
                   <svg class="iot-thermo" viewBox="0 0 24 24">
                     <rect x="10" y="3" width="4" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2" />
@@ -1164,19 +1242,19 @@
                   </svg>
                 </div>
                 <div class="lcd-weather iot-only" aria-hidden="true">
-                  <svg class="iot-icon" viewBox="0 0 24 24">
+                  <svg class="iot-icon weather-icon" data-weather="sun" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2" />
                     <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.5 4.5l2.2 2.2M17.3 17.3l2.2 2.2M4.5 19.5l2.2-2.2M17.3 6.7l2.2-2.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                   </svg>
-                  <svg class="iot-icon" viewBox="0 0 24 24">
+                  <svg class="iot-icon weather-icon" data-weather="rain" viewBox="0 0 24 24">
                     <path d="M4 12a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     <path d="M4 12c2 2 4 2 6 0c2 2 4 2 6 0c2 2 4 2 6 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     <path d="M12 12v5a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                   </svg>
-                  <svg class="iot-icon" viewBox="0 0 24 24">
+                  <svg class="iot-icon weather-icon" data-weather="cloud" viewBox="0 0 24 24">
                     <path d="M6 14a4 4 0 0 1 7.6-1.8A3.5 3.5 0 1 1 16 19H7a3 3 0 0 1-1-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                   </svg>
-                  <svg class="iot-icon" viewBox="0 0 24 24">
+                  <svg class="iot-icon weather-icon" data-weather="snow" viewBox="0 0 24 24">
                     <circle cx="12" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="2" />
                     <circle cx="12" cy="15" r="4" fill="none" stroke="currentColor" stroke-width="2" />
                     <circle cx="11" cy="7" r="0.6" fill="currentColor" />
@@ -1496,6 +1574,9 @@
       const cup = document.getElementById("cup");
       const spill = document.getElementById("spill");
       const spoutTray = document.getElementById("spout-tray");
+      const tempHigh = document.getElementById("temp-high");
+      const tempLow = document.getElementById("temp-low");
+      const weatherIcons = document.querySelectorAll(".weather-icon");
 
       const buttons = document.querySelectorAll(".btn");
       const tabButtons = document.querySelectorAll(".tab-button");
@@ -1503,6 +1584,31 @@
       const rulesContent = document.getElementById("rules-content");
 
       let currentTab = "normal";
+      const WEATHER_DISPLAY_DELAY = 10000;
+      const WEATHER_BLINK_ON = 700;
+      const WEATHER_GAP_SHORT = 160;
+      const WEATHER_GAP_LONG = 900;
+      const WEATHER_PATTERNS = [
+        ["sun"],
+        ["cloud"],
+        ["rain"],
+        ["snow"],
+        ["sun", "cloud"],
+        ["cloud", "sun"],
+        ["cloud", "rain"],
+        ["rain", "cloud"],
+        ["snow", "cloud"],
+        ["cloud", "snow"],
+        ["sun", "rain"]
+      ];
+
+      const weatherState = {
+        active: false,
+        hideTimer: null,
+        cycleTimer: null,
+        temps: null,
+        sequence: null
+      };
 
       function setActiveTab(tabName) {
         currentTab = tabName;
@@ -1512,6 +1618,9 @@
           button.classList.toggle("is-active", isActive);
           button.setAttribute("aria-selected", String(isActive));
         });
+        if (tabName !== "iot") {
+          stopWeatherDisplay();
+        }
       }
 
       tabButtons.forEach((button) => {
@@ -1544,6 +1653,7 @@
       }
 
       function setAmount(value) {
+        stopWeatherDisplay();
         state.amount = clampAmount(value);
         updateLCD();
         scheduleDisplayClear();
@@ -1592,6 +1702,102 @@
       function setEco(on) {
         state.ecoMode = on;
         lampEco.classList.toggle("on", on);
+      }
+
+      function setWeatherIconsOff() {
+        weatherIcons.forEach((icon) => {
+          icon.classList.remove("on");
+        });
+      }
+
+      function setWeatherIconOn(type) {
+        weatherIcons.forEach((icon) => {
+          if (icon.dataset.weather === type) {
+            icon.classList.add("on");
+          }
+        });
+      }
+
+      function pickWeatherPattern() {
+        const pick = WEATHER_PATTERNS[Math.floor(Math.random() * WEATHER_PATTERNS.length)];
+        return pick.slice();
+      }
+
+      function pickTemperaturePair() {
+        const seasons = [
+          { minRange: [0, 8], maxRange: [8, 16] },
+          { minRange: [6, 13], maxRange: [14, 22] },
+          { minRange: [18, 26], maxRange: [27, 35] },
+          { minRange: [5, 12], maxRange: [13, 21] }
+        ];
+        const season = seasons[Math.floor(Math.random() * seasons.length)];
+        const min = season.minRange[0] + Math.floor(Math.random() * (season.minRange[1] - season.minRange[0] + 1));
+        const maxBase = season.maxRange[0] + Math.floor(Math.random() * (season.maxRange[1] - season.maxRange[0] + 1));
+        const max = Math.max(maxBase, min + 3);
+        return {
+          high: String(max).padStart(2, "0"),
+          low: String(min).padStart(2, "0")
+        };
+      }
+
+      function startWeatherCycle(sequence) {
+        clearTimeout(weatherState.cycleTimer);
+        setWeatherIconsOff();
+        if (sequence.length === 1) {
+          setWeatherIconOn(sequence[0]);
+          return;
+        }
+        let step = 0;
+        const tick = () => {
+          if (!weatherState.active) return;
+          const type = sequence[step % sequence.length];
+          setWeatherIconsOff();
+          setWeatherIconOn(type);
+          setTimeout(() => {
+            setWeatherIconsOff();
+          }, WEATHER_BLINK_ON);
+          const delay = step % sequence.length === 0
+            ? WEATHER_BLINK_ON + WEATHER_GAP_SHORT
+            : WEATHER_BLINK_ON + WEATHER_GAP_LONG;
+          weatherState.cycleTimer = setTimeout(() => {
+            step = (step + 1) % sequence.length;
+            tick();
+          }, delay);
+        };
+        tick();
+      }
+
+      function showWeatherDisplay() {
+        if (currentTab !== "iot") return;
+        if (!lcd) return;
+        weatherState.active = true;
+        lcd.classList.add("weather-active");
+        clearTimeout(weatherState.hideTimer);
+        const temps = pickTemperaturePair();
+        weatherState.temps = temps;
+        if (tempHigh) tempHigh.textContent = temps.high;
+        if (tempLow) tempLow.textContent = temps.low;
+        const sequence = pickWeatherPattern();
+        weatherState.sequence = sequence;
+        startWeatherCycle(sequence);
+      }
+
+      function scheduleWeatherHide(delayMs) {
+        clearTimeout(weatherState.hideTimer);
+        if (!weatherState.active) return;
+        weatherState.hideTimer = setTimeout(() => {
+          stopWeatherDisplay();
+        }, delayMs);
+      }
+
+      function stopWeatherDisplay() {
+        weatherState.active = false;
+        clearTimeout(weatherState.hideTimer);
+        clearTimeout(weatherState.cycleTimer);
+        setWeatherIconsOff();
+        if (lcd) lcd.classList.remove("weather-active");
+        if (tempHigh) tempHigh.textContent = "--";
+        if (tempLow) tempLow.textContent = "--";
       }
 
       function setLock(on, options = {}) {
@@ -1730,9 +1936,14 @@
             finishDispensing(true);
           }, DISPENSE_DURATION);
         }
+        if (mode === "hold" && type !== "milk" && type !== "milkWarm" && type !== "milkCold") {
+          showWeatherDisplay();
+        }
       }
 
       function finishDispensing(complete) {
+        const lastMode = state.dispenseMode;
+        const lastType = state.dispensingType;
         const isMilkWarmPhase = state.dispensingType === "milkWarm" && state.milkPhase === 1;
         const isMilkColdPhase = state.dispensingType === "milkCold";
         const isHotDispense = state.dispensingType === "hot" || state.dispensingType === "warm";
@@ -1761,6 +1972,21 @@
           startRelockTimer();
         } else if (!state.isLocked && !isMilkWarmPhase && !isMilkColdPhase) {
           startRelockTimer();
+        }
+
+        if (complete) {
+          if (lastMode === "auto") {
+            if (lastType === "milkCold") {
+              showWeatherDisplay();
+              scheduleWeatherHide(WEATHER_DISPLAY_DELAY);
+            } else if (lastType !== "milkWarm") {
+              showWeatherDisplay();
+              scheduleWeatherHide(WEATHER_DISPLAY_DELAY);
+            }
+          }
+          if (lastMode === "hold" && lastType !== "milk" && lastType !== "milkWarm" && lastType !== "milkCold") {
+            scheduleWeatherHide(WEATHER_DISPLAY_DELAY);
+          }
         }
       }
 
@@ -1809,7 +2035,11 @@
       function handleEcoPress(isLong) {
         if (isLong) {
           cancelDispensing();
+          stopWeatherDisplay();
           clearAmount();
+          state.milkPhase = 0;
+          state.milkTotal = 0;
+          state.pendingAction = null;
           if (!state.isLocked) {
             setLock(true, { keepAmount: true });
           }
