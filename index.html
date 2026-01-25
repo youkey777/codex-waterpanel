@@ -9,8 +9,8 @@
     <title>ウォーターサーバー操作パネル デモ</title>
     <style>
       :root {
-        --lcd-green: #00ff66;
-        --lcd-dim: rgba(0, 255, 102, 0.3);
+        --lcd-green: #ffffff;
+        --lcd-dim: rgba(255, 255, 255, 0.3);
         --lock-red: #ff3b30;
         --eco-green: #31d158;
         --panel-max: 900px;
@@ -221,7 +221,7 @@
         font-size: 0.75em;
         font-family: "Segoe UI", sans-serif;
         letter-spacing: 0.02em;
-        color: #c7c7c7;
+        color: #ffffff;
         text-shadow: none;
       }
 
@@ -240,7 +240,7 @@
         font-size: 1em;
         font-family: "Courier New", monospace;
         letter-spacing: 0.32em;
-        color: var(--lcd-green);
+        color: #ffffff;
         text-shadow: 0 0 6px rgba(0, 255, 102, 0.45);
         opacity: 0;
         pointer-events: none;
@@ -1958,7 +1958,7 @@
       const STEP = 10;
       const HOLD_INTERVAL = 100;
       const HOLD_DELAY = 400;
-      const UNLOCK_HOLD = 3000;
+      const UNLOCK_HOLD = 2500;
       const DISPENSE_DURATION = 3500;
       const DISPLAY_CLEAR_DELAY = 15000;
       const RELock_DELAY = 5000;
@@ -2513,6 +2513,7 @@
           resetPanelState();
           clearTimeout(state.timers.userReset);
           setActiveUser(null);
+          setLock(true, { keepAmount: true });
           return;
         }
         if (state.isDispensing && state.dispenseMode === "auto") {
