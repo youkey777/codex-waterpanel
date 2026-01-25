@@ -408,16 +408,18 @@
       }
 
       body[data-panel-type="iot"] .lcd {
+        --lcd-weather-block: calc(30px * 2 + 6px);
+        --lcd-unit-space: 2.4ch;
         --lcd-value-left: clamp(36px, 6vw, 48px);
-        --lcd-value-right: clamp(64px, 10vw, 96px);
+        --lcd-value-right: calc(var(--lcd-weather-block) + var(--lcd-unit-space) + 8px);
         min-width: 0;
         width: clamp(260px, 52vw, 360px);
         max-width: 100%;
-        padding-right: clamp(44px, 9vw, 64px);
+        padding-right: calc(var(--lcd-weather-block) + 14px);
       }
 
       body[data-panel-type="iot"] .lcd-unit {
-        right: clamp(36px, 6vw, 58px);
+        right: calc(var(--lcd-weather-block) + 4px);
         bottom: 10px;
       }
 
@@ -1128,6 +1130,20 @@
           top: 92px;
           height: 70px;
         }
+
+        body[data-panel-type="iot"] .lcd-temp {
+          font-size: 1.2em;
+        }
+
+        body[data-panel-type="iot"] .lcd-temp.high {
+          left: calc(var(--lcd-value-left) + 16px);
+        }
+
+        body[data-panel-type="iot"] .lcd-temp.low {
+          left: calc(
+            var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 + 16px
+          );
+        }
       }
 
       @media (min-width: 700px) and (max-width: 900px) {
@@ -1265,6 +1281,40 @@
           font-size: 10px;
         }
 
+        body[data-panel-type="iot"] .lcd-value {
+          font-size: 0.92em;
+          letter-spacing: 0.18em;
+          white-space: nowrap;
+        }
+
+        body[data-panel-type="iot"] .lcd-temp {
+          font-size: 1em;
+        }
+
+        body[data-panel-type="iot"] .lcd-temp.high {
+          left: calc(var(--lcd-value-left) - 22px);
+        }
+
+        body[data-panel-type="iot"] .lcd-thermo.left {
+          left: 14px;
+        }
+
+        body[data-panel-type="iot"] .lcd-temp.low {
+          left: calc(
+            var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2
+          );
+        }
+
+        body[data-panel-type="iot"] .lcd-thermo.mid {
+          left: calc(
+            var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 - 8px
+          );
+        }
+
+        body[data-panel-type="iot"] .lcd-unit {
+          right: calc(var(--lcd-weather-block) + 0px);
+        }
+
         body[data-panel-type="iot"] .panel-status {
             grid-template-columns: clamp(84px, 26vw, 120px) auto clamp(84px, 26vw, 120px);
             column-gap: 8px;
@@ -1392,13 +1442,15 @@
         }
 
         body[data-panel-type="iot"] .lcd {
+          --lcd-weather-block: calc(22px * 2 + 4px);
+          --lcd-unit-space: 2.2ch;
           --lcd-value-left: 54px;
-          --lcd-value-right: 92px;
-          padding-right: 76px;
+          --lcd-value-right: calc(var(--lcd-weather-block) + var(--lcd-unit-space) + 6px);
+          padding-right: calc(var(--lcd-weather-block) + 10px);
         }
 
         body[data-panel-type="iot"] .lcd-unit {
-          right: 70px;
+          right: calc(var(--lcd-weather-block) + 0px);
           bottom: 6px;
           font-size: 0.7em;
         }
@@ -1437,11 +1489,13 @@
         }
 
         body[data-panel-type="iot"] .lcd-thermo.left {
-          left: 8px;
+          left: 14px;
         }
 
         body[data-panel-type="iot"] .lcd-thermo.mid {
-          left: 50%;
+          left: calc(
+            var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 - 8px
+          );
           bottom: 4px;
         }
 
@@ -1526,13 +1580,15 @@
         }
 
         body[data-panel-type="iot"] .lcd {
+          --lcd-weather-block: calc(22px * 2 + 4px);
+          --lcd-unit-space: 2.2ch;
           --lcd-value-left: 54px;
-          --lcd-value-right: 92px;
-          padding-right: 76px;
+          --lcd-value-right: calc(var(--lcd-weather-block) + var(--lcd-unit-space) + 6px);
+          padding-right: calc(var(--lcd-weather-block) + 10px);
         }
 
         body[data-panel-type="iot"] .lcd-unit {
-          right: 70px;
+          right: calc(var(--lcd-weather-block) + 0px);
           bottom: 6px;
           font-size: 0.7em;
         }
@@ -1571,11 +1627,13 @@
         }
 
         body[data-panel-type="iot"] .lcd-thermo.left {
-          left: 8px;
+          left: 14px;
         }
 
         body[data-panel-type="iot"] .lcd-thermo.mid {
-          left: 50%;
+          left: calc(
+            var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 - 8px
+          );
           bottom: 4px;
         }
       }
