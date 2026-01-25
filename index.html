@@ -2152,10 +2152,18 @@
       }
 
       function blinkUnit() {
+        if (state.amount === null) {
+          lcd.classList.remove("off");
+          lcd.classList.add("dim");
+          lcdValue.textContent = "  ml";
+        }
         lcdValue.classList.add("blink");
         clearTimeout(state.timers.blink);
         state.timers.blink = setTimeout(() => {
           lcdValue.classList.remove("blink");
+          if (state.amount === null) {
+            updateLCD();
+          }
         }, 2000);
       }
 
