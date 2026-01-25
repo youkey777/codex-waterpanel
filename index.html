@@ -477,6 +477,16 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
       }
 
+      .iot-user-btn.is-active {
+        border-color: #f2a313;
+        box-shadow: 0 6px 10px rgba(242, 163, 19, 0.25);
+        background: #fff7e1;
+      }
+
+      .iot-user-btn.is-active .iot-user-icon {
+        color: #e08a00;
+      }
+
       .iot-user-btn .badge {
         position: absolute;
         top: 2px;
@@ -1292,7 +1302,7 @@
         }
 
         body[data-panel-type="iot"] .lcd-temp.high {
-          left: calc(var(--lcd-value-left) - 22px);
+          left: calc(var(--lcd-value-left) - 24px);
         }
 
         body[data-panel-type="iot"] .lcd-thermo.left {
@@ -1307,7 +1317,7 @@
 
         body[data-panel-type="iot"] .lcd-thermo.mid {
           left: calc(
-            var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 - 8px
+            var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 - 6px
           );
         }
 
@@ -1458,19 +1468,19 @@
         body[data-panel-type="iot"] .lcd-weather {
           right: 4px;
           gap: 4px;
-          grid-template-columns: repeat(2, 18px);
-          grid-template-rows: repeat(2, 18px);
+          grid-template-columns: repeat(2, 20px);
+          grid-template-rows: repeat(2, 20px);
         }
 
         body[data-panel-type="iot"] .iot-icon {
-          width: 18px;
-          height: 18px;
+          width: 20px;
+          height: 20px;
         }
 
         body[data-panel-type="iot"] .iot-icon[data-weather="cloud"],
         body[data-panel-type="iot"] .iot-icon[data-weather="snow"] {
-          width: 22px;
-          height: 22px;
+          width: 24px;
+          height: 24px;
         }
 
         body[data-panel-type="iot"] .iot-icon[data-weather="cloud"],
@@ -1479,8 +1489,8 @@
         }
 
         body[data-panel-type="iot"] .iot-icon[data-weather="rain"] {
-          width: 20px;
-          height: 20px;
+          width: 22px;
+          height: 22px;
         }
 
         body[data-panel-type="iot"] .iot-thermo {
@@ -1494,7 +1504,7 @@
 
         body[data-panel-type="iot"] .lcd-thermo.mid {
           left: calc(
-            var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 - 8px
+            var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 - 6px
           );
           bottom: 4px;
         }
@@ -1596,19 +1606,19 @@
         body[data-panel-type="iot"] .lcd-weather {
           right: 4px;
           gap: 4px;
-          grid-template-columns: repeat(2, 18px);
-          grid-template-rows: repeat(2, 18px);
+          grid-template-columns: repeat(2, 20px);
+          grid-template-rows: repeat(2, 20px);
         }
 
         body[data-panel-type="iot"] .iot-icon {
-          width: 18px;
-          height: 18px;
+          width: 20px;
+          height: 20px;
         }
 
         body[data-panel-type="iot"] .iot-icon[data-weather="cloud"],
         body[data-panel-type="iot"] .iot-icon[data-weather="snow"] {
-          width: 22px;
-          height: 22px;
+          width: 24px;
+          height: 24px;
         }
 
         body[data-panel-type="iot"] .iot-icon[data-weather="cloud"],
@@ -1617,8 +1627,8 @@
         }
 
         body[data-panel-type="iot"] .iot-icon[data-weather="rain"] {
-          width: 20px;
-          height: 20px;
+          width: 22px;
+          height: 22px;
         }
 
         body[data-panel-type="iot"] .iot-thermo {
@@ -1632,7 +1642,7 @@
 
         body[data-panel-type="iot"] .lcd-thermo.mid {
           left: calc(
-            var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 - 8px
+            var(--lcd-value-left) + (100% - var(--lcd-value-left) - var(--lcd-value-right)) / 2 - 6px
           );
           bottom: 4px;
         }
@@ -1963,6 +1973,13 @@
         milkCold: "#CFE3FF"
       };
 
+      const createMemoryProfile = () => ({
+        coldRoom: 150,
+        hot: 150,
+        warm: 150,
+        milk: 150
+      });
+
       const state = {
         amount: null,
         isLocked: true,
@@ -1977,11 +1994,13 @@
         unlockTriggered: false,
         lockBlinkArmed: false,
         lockBlinkPointerId: null,
-        memory: {
-          coldRoom: 150,
-          hot: 150,
-          warm: 150,
-          milk: 150
+        activeUser: null,
+        memoryProfiles: {
+          default: createMemoryProfile(),
+          user1: createMemoryProfile(),
+          user2: createMemoryProfile(),
+          user3: createMemoryProfile(),
+          user4: createMemoryProfile()
         },
         timers: {
           hold: null,
@@ -1993,7 +2012,8 @@
           amountBlink: null,
           displayClear: null,
           overflow: null,
-          lampBlink: null
+          lampBlink: null,
+          userReset: null
         }
       };
 
@@ -2010,6 +2030,7 @@
       const tempHigh = document.getElementById("temp-high");
       const tempLow = document.getElementById("temp-low");
       const weatherIcons = document.querySelectorAll(".weather-icon");
+      const iotUserButtons = document.querySelectorAll(".iot-user-btn");
 
       const buttons = document.querySelectorAll(".btn");
       const tabButtons = document.querySelectorAll(".tab-button");
@@ -2078,11 +2099,17 @@
         return Math.min(MAX_AMOUNT, Math.max(MIN_AMOUNT, value));
       }
 
+      function getActiveMemory() {
+        if (!state.activeUser) return state.memoryProfiles.default;
+        return state.memoryProfiles[state.activeUser] || state.memoryProfiles.default;
+      }
+
       function getMemoryBase() {
+        const memory = getActiveMemory();
         if (!state.isLocked && state.unlockButton) {
-          return state.memory[state.unlockButton] || 150;
+          return memory[state.unlockButton] || 150;
         }
-        return state.memory.coldRoom || 150;
+        return memory.coldRoom || 150;
       }
 
       function setAmount(value) {
@@ -2284,6 +2311,15 @@
         }, DISPLAY_CLEAR_DELAY);
       }
 
+      function resetPanelState() {
+        cancelDispensing();
+        stopWeatherDisplay();
+        clearAmount();
+        state.milkPhase = 0;
+        state.milkTotal = 0;
+        state.pendingAction = null;
+      }
+
       function setStream(active, color) {
         if (active) {
           stream.classList.add("on");
@@ -2408,6 +2444,12 @@
         }
 
         if (complete) {
+          if (state.activeUser) {
+            clearTimeout(state.timers.userReset);
+            state.timers.userReset = setTimeout(() => {
+              setActiveUser(null);
+            }, 5000);
+          }
           if (lastMode === "auto") {
             if (lastType === "milkCold") {
               showWeatherDisplay();
@@ -2429,14 +2471,15 @@
       }
 
       function rememberAmount(type, amount) {
+        const memory = getActiveMemory();
         if (type === "cold" || type === "room") {
-          state.memory.coldRoom = amount;
+          memory.coldRoom = amount;
         } else if (type === "hot") {
-          state.memory.hot = amount;
+          memory.hot = amount;
         } else if (type === "warm") {
-          state.memory.warm = amount;
+          memory.warm = amount;
         } else if (type === "milk") {
-          state.memory.milk = amount;
+          memory.milk = amount;
         }
       }
 
@@ -2467,15 +2510,9 @@
 
       function handleEcoPress(isLong) {
         if (isLong) {
-          cancelDispensing();
-          stopWeatherDisplay();
-          clearAmount();
-          state.milkPhase = 0;
-          state.milkTotal = 0;
-          state.pendingAction = null;
-          if (!state.isLocked) {
-            setLock(true, { keepAmount: true });
-          }
+          resetPanelState();
+          clearTimeout(state.timers.userReset);
+          setActiveUser(null);
           return;
         }
         if (state.isDispensing && state.dispenseMode === "auto") {
@@ -2717,11 +2754,38 @@
         });
       }
 
+      function setActiveUser(nextUser) {
+        state.activeUser = nextUser;
+        iotUserButtons.forEach((button, index) => {
+          const userKey = `user${index + 1}`;
+          const isActive = nextUser === userKey;
+          button.classList.toggle("is-active", isActive);
+          button.setAttribute("aria-pressed", String(isActive));
+        });
+      }
+
+      function setupUserButtons() {
+        if (!iotUserButtons.length) return;
+        iotUserButtons.forEach((button, index) => {
+          const userKey = `user${index + 1}`;
+          button.dataset.userKey = userKey;
+          button.setAttribute("role", "button");
+          button.setAttribute("aria-pressed", "false");
+          button.addEventListener("click", () => {
+            const nextUser = state.activeUser === userKey ? null : userKey;
+            clearTimeout(state.timers.userReset);
+            resetPanelState();
+            setActiveUser(nextUser);
+          });
+        });
+      }
+
       function init() {
         updateLCD();
         setEco(false);
         setLock(true);
         setupButtonHandlers();
+        setupUserButtons();
       }
 
       init();
