@@ -1958,7 +1958,7 @@
       const STEP = 10;
       const HOLD_INTERVAL = 100;
       const HOLD_DELAY = 400;
-      const UNLOCK_HOLD = 2500;
+      const UNLOCK_HOLD = 2000;
       const DISPENSE_DURATION = 3500;
       const DISPLAY_CLEAR_DELAY = 15000;
       const RELock_DELAY = 5000;
@@ -2557,7 +2557,7 @@
           blinkLockLamp();
           return;
         }
-        if (!state.isLocked && state.unlockButton && isHotGroup && type !== state.unlockButton) {
+        if (!state.isLocked && state.unlockButton && isHotGroup && type !== state.unlockButton && state.amount !== null) {
           state.lockBlinkArmed = false;
           state.lockBlinkPointerId = null;
           setLock(true);
