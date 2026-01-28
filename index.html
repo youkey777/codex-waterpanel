@@ -2293,12 +2293,7 @@
         setLock(false);
         state.unlockButton = buttonType;
         startRelockTimer();
-        if (state.amount === null && buttonType === "milk") {
-          setAmount(getMemoryBase());
-          state.pendingAction = "milk";
-        } else if (state.amount === null) {
-          clearAmount();
-        }
+        setAmount(getMemoryBase());
       }
 
       function blinkLockLamp() {
@@ -2586,7 +2581,6 @@
           if (state.amount === null) {
             if (!state.isLocked) {
               setAmount(getMemoryBase());
-              state.pendingAction = "milk";
               return;
             }
             blinkUnit();
