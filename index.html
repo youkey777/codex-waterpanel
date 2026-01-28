@@ -1961,7 +1961,7 @@
       const UNLOCK_HOLD = 2000;
       const DISPENSE_DURATION = 3500;
       const DISPLAY_CLEAR_DELAY = 15000;
-      const RELock_DELAY = 5000;
+      const RELock_DELAY = 10000;
       const ECO_HOLD_CANCEL = 1000;
 
       const COLORS = {
@@ -2293,7 +2293,10 @@
         setLock(false);
         state.unlockButton = buttonType;
         startRelockTimer();
-        if (state.amount === null) {
+        if (state.amount === null && buttonType === "milk") {
+          setAmount(getMemoryBase());
+          state.pendingAction = "milk";
+        } else if (state.amount === null) {
           clearAmount();
         }
       }
@@ -2581,6 +2584,11 @@
         }
         if (type === "milk") {
           if (state.amount === null) {
+            if (!state.isLocked) {
+              setAmount(getMemoryBase());
+              state.pendingAction = "milk";
+              return;
+            }
             blinkUnit();
             return;
           }
