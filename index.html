@@ -2452,7 +2452,9 @@
           startRelockTimer();
         } else if (isMilkWarmPhase) {
           startRelockTimer();
-        } else if (!state.isLocked && !isMilkColdPhase) {
+        } else if (isMilkColdPhase) {
+          startRelockTimer();
+        } else if (!state.isLocked) {
           startRelockTimer();
         }
 
