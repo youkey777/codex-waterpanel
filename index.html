@@ -2443,16 +2443,16 @@
           state.milkTotal = 0;
         }
 
-        if (isMilkWarmPhase) {
-          setLock(true, { keepAmount: true });
-        } else if (complete && !isMilkWarmPhase) {
+        if (complete && !isMilkWarmPhase) {
           clearAmount();
         }
 
         if (isHotDispense) {
           setLock(false);
           startRelockTimer();
-        } else if (!state.isLocked && !isMilkWarmPhase && !isMilkColdPhase) {
+        } else if (isMilkWarmPhase) {
+          startRelockTimer();
+        } else if (!state.isLocked && !isMilkColdPhase) {
           startRelockTimer();
         }
 
@@ -2568,13 +2568,6 @@
         }
         if (isHotGroup && state.isLocked && !(type === "milk" && state.milkPhase === 1)) {
           blinkLockLamp();
-          return;
-        }
-        if (!state.isLocked && state.unlockButton && state.unlockButton !== "milk" && isHotGroup && type !== state.unlockButton && type !== "milk" && state.amount !== null) {
-          state.lockBlinkArmed = false;
-          state.lockBlinkPointerId = null;
-          setLock(true);
-          clearAmount();
           return;
         }
         if (!state.isLocked && state.unlockButton && state.unlockButton !== "milk" && !isHotGroup && state.amount !== null) {
