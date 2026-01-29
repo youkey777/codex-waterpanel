@@ -2780,6 +2780,7 @@
             const nextUser = state.activeUser === userKey ? null : userKey;
             clearTimeout(state.timers.userReset);
             resetPanelState();
+            setLock(true, { keepAmount: true });
             setActiveUser(nextUser);
           });
         });
