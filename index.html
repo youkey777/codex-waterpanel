@@ -2570,14 +2570,14 @@
           blinkLockLamp();
           return;
         }
-        if (!state.isLocked && state.unlockButton && isHotGroup && type !== state.unlockButton && type !== "milk" && state.amount !== null) {
+        if (!state.isLocked && state.unlockButton && state.unlockButton !== "milk" && isHotGroup && type !== state.unlockButton && type !== "milk" && state.amount !== null) {
           state.lockBlinkArmed = false;
           state.lockBlinkPointerId = null;
           setLock(true);
           clearAmount();
           return;
         }
-        if (!state.isLocked && state.unlockButton && !isHotGroup && state.amount !== null) {
+        if (!state.isLocked && state.unlockButton && state.unlockButton !== "milk" && !isHotGroup && state.amount !== null) {
           state.lockBlinkArmed = false;
           state.lockBlinkPointerId = null;
           setLock(true);
