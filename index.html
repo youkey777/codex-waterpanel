@@ -2578,11 +2578,7 @@
           return;
         }
         if (!state.isLocked && state.unlockButton && state.unlockButton !== "milk" && !isHotGroup && state.amount !== null) {
-          state.lockBlinkArmed = false;
-          state.lockBlinkPointerId = null;
-          setLock(true);
-          clearAmount();
-          return;
+          // allow cold/room dispense after hot unlock with specified amount
         }
         if (type === "milk") {
           if (state.amount === null) {
