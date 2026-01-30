@@ -2047,6 +2047,16 @@
       const rulesToggle = document.querySelector(".rules-toggle");
       const rulesContent = document.getElementById("rules-content");
 
+      function getNextLockColorClass() {
+        return state.lockColorToggle ? "lock-color-orange" : "lock-color-white";
+      }
+
+      function applyLockColorClass(className) {
+        if (!lampLock) return;
+        lampLock.classList.remove("lock-color-white", "lock-color-orange");
+        if (className) lampLock.classList.add(className);
+      }
+
       let currentTab = "normal";
       const WEATHER_DISPLAY_DELAY = 10000;
       const WEATHER_BLINK_ON = 700;
@@ -2815,12 +2825,3 @@
     </script>
   </body>
 </html>
-      function getNextLockColorClass() {
-        return state.lockColorToggle ? "lock-color-orange" : "lock-color-white";
-      }
-
-      function applyLockColorClass(className) {
-        if (!lampLock) return;
-        lampLock.classList.remove("lock-color-white", "lock-color-orange");
-        if (className) lampLock.classList.add(className);
-      }
