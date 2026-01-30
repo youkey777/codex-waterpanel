@@ -529,8 +529,9 @@
 
       .lamp.on.lock {
         opacity: 1;
-        background: var(--lock-red);
-        box-shadow: 0 0 12px rgba(255, 59, 48, 0.8);
+        animation: lockUnlockPulse 1s ease-in-out infinite;
+        background: #ffffff;
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
       }
 
       .lamp.attention {
@@ -1106,6 +1107,18 @@
         }
         50% {
           opacity: 1;
+        }
+      }
+
+      @keyframes lockUnlockPulse {
+        0%,
+        100% {
+          background: #ffffff;
+          box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+        }
+        50% {
+          background: #ff9f0a;
+          box-shadow: 0 0 12px rgba(255, 159, 10, 0.85);
         }
       }
 
