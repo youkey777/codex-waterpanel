@@ -529,23 +529,25 @@
 
       .lamp.on.lock {
         opacity: 1;
-        background: #ffffff;
-        box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+        background: var(--lock-color, #ffffff);
+        box-shadow: 0 0 12px var(--lock-glow, rgba(255, 255, 255, 0.8));
       }
 
       .lamp.attention {
         animation: lampBlink 0.5s ease-in-out infinite;
         opacity: 1;
+        background: var(--lock-color, #ffffff);
+        box-shadow: 0 0 14px var(--lock-glow, rgba(255, 255, 255, 0.9));
       }
 
       .lamp.lock-color-white {
-        background: #ffffff;
-        box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+        --lock-color: #ffffff;
+        --lock-glow: rgba(255, 255, 255, 0.85);
       }
 
       .lamp.lock-color-orange {
-        background: #ff9f0a;
-        box-shadow: 0 0 12px rgba(255, 159, 10, 0.85);
+        --lock-color: #ff9f0a;
+        --lock-glow: rgba(255, 159, 10, 0.85);
       }
 
       .lamp.on.eco {
