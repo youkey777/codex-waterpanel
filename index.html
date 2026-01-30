@@ -529,16 +529,23 @@
 
       .lamp.on.lock {
         opacity: 1;
-        animation: lockUnlockPulse 1s ease-in-out infinite;
         background: #ffffff;
         box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
       }
 
       .lamp.attention {
         animation: lampBlink 0.5s ease-in-out infinite;
-        background: var(--lock-red);
-        box-shadow: 0 0 14px rgba(255, 59, 48, 0.9);
         opacity: 1;
+      }
+
+      .lamp.lock-color-white {
+        background: #ffffff;
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+      }
+
+      .lamp.lock-color-orange {
+        background: #ff9f0a;
+        box-shadow: 0 0 12px rgba(255, 159, 10, 0.85);
       }
 
       .lamp.on.eco {
@@ -1110,17 +1117,6 @@
         }
       }
 
-      @keyframes lockUnlockPulse {
-        0%,
-        100% {
-          background: #ffffff;
-          box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
-        }
-        50% {
-          background: #ff9f0a;
-          box-shadow: 0 0 12px rgba(255, 159, 10, 0.85);
-        }
-      }
 
       @media (max-width: 768px) {
         .page {
@@ -2007,6 +2003,7 @@
         unlockTriggered: false,
         lockBlinkArmed: false,
         lockBlinkPointerId: null,
+        lockColorToggle: false,
         activeUser: null,
         memoryProfiles: {
           default: createMemoryProfile(),
@@ -2287,6 +2284,9 @@
         lampLock.classList.toggle("on", !on);
         lampLock.classList.remove("attention");
         if (on) {
+          applyLockColorClass("");
+        }
+        if (on) {
           if (state.unlockButton && !keepAmount) {
             clearAmount();
           }
@@ -2305,6 +2305,9 @@
       function unlockHot(buttonType) {
         setLock(false);
         state.unlockButton = buttonType;
+        const colorClass = getNextLockColorClass();
+        applyLockColorClass(colorClass);
+        state.lockColorToggle = !state.lockColorToggle;
         startRelockTimer();
         if (state.amount !== null) {
           return;
@@ -2319,6 +2322,7 @@
       function blinkLockLamp() {
         if (!lampLock) return;
         if (!state.isLocked) return;
+        applyLockColorClass(getNextLockColorClass());
         lampLock.classList.remove("attention");
         void lampLock.offsetWidth;
         lampLock.classList.add("attention");
@@ -2811,3 +2815,12 @@
     </script>
   </body>
 </html>
+      function getNextLockColorClass() {
+        return state.lockColorToggle ? "lock-color-orange" : "lock-color-white";
+      }
+
+      function applyLockColorClass(className) {
+        if (!lampLock) return;
+        lampLock.classList.remove("lock-color-white", "lock-color-orange");
+        if (className) lampLock.classList.add(className);
+      }
