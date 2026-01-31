@@ -540,19 +540,9 @@
         box-shadow: 0 0 14px var(--lock-glow, rgba(255, 255, 255, 0.9));
       }
 
-      .lamp.lock-color-white {
-        --lock-color: #ffffff;
-        --lock-glow: rgba(255, 255, 255, 0.85);
-      }
-
-      .lamp.lock-color-orange {
-        --lock-color: #ff9f0a;
-        --lock-glow: rgba(255, 159, 10, 0.85);
-      }
-
-      .lamp.lock-color-red {
-        --lock-color: #ff3b30;
-        --lock-glow: rgba(255, 59, 48, 0.85);
+      .lamp.lock-color-green {
+        --lock-color: #00c853;
+        --lock-glow: rgba(0, 200, 83, 0.85);
       }
 
       .lamp.on.eco {
@@ -2010,7 +2000,6 @@
         unlockTriggered: false,
         lockBlinkArmed: false,
         lockBlinkPointerId: null,
-        lockColorIndex: 0,
         activeUser: null,
         memoryProfiles: {
           default: createMemoryProfile(),
@@ -2054,14 +2043,9 @@
       const rulesToggle = document.querySelector(".rules-toggle");
       const rulesContent = document.getElementById("rules-content");
 
-      function getNextLockColorClass() {
-        const classes = ["lock-color-orange", "lock-color-white", "lock-color-red"];
-        return classes[state.lockColorIndex] || "lock-color-orange";
-      }
-
       function applyLockColorClass(className) {
         if (!lampLock) return;
-        lampLock.classList.remove("lock-color-white", "lock-color-orange", "lock-color-red");
+        lampLock.classList.remove("lock-color-green");
         if (className) lampLock.classList.add(className);
       }
 
@@ -2323,9 +2307,7 @@
       function unlockHot(buttonType) {
         setLock(false);
         state.unlockButton = buttonType;
-        const colorClass = getNextLockColorClass();
-        applyLockColorClass(colorClass);
-        state.lockColorIndex = (state.lockColorIndex + 1) % 3;
+        applyLockColorClass("lock-color-green");
         startRelockTimer();
         if (state.amount !== null) {
           return;
@@ -2340,7 +2322,7 @@
       function blinkLockLamp() {
         if (!lampLock) return;
         if (!state.isLocked) return;
-        applyLockColorClass(getNextLockColorClass());
+        applyLockColorClass("lock-color-green");
         lampLock.classList.remove("attention");
         void lampLock.offsetWidth;
         lampLock.classList.add("attention");
