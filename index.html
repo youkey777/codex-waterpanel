@@ -2670,6 +2670,10 @@
               clearInterval(state.timers.hold);
               clearTimeout(state.timers.holdDelay);
             });
+            button.addEventListener("pointercancel", () => {
+              clearInterval(state.timers.hold);
+              clearTimeout(state.timers.holdDelay);
+            });
             return;
           }
 
@@ -2689,6 +2693,9 @@
               if (!longPressed) handleEcoPress(false);
             });
             button.addEventListener("pointerleave", () => {
+              clearTimeout(state.timers.holdDelay);
+            });
+            button.addEventListener("pointercancel", () => {
               clearTimeout(state.timers.holdDelay);
             });
             return;
@@ -2757,6 +2764,12 @@
               state.lockBlinkPointerId = null;
               endDispensePress();
             });
+            button.addEventListener("pointercancel", (event) => {
+              clearTimeout(state.timers.unlock);
+              state.lockBlinkArmed = false;
+              state.lockBlinkPointerId = null;
+              endDispensePress();
+            });
             return;
           }
 
@@ -2770,6 +2783,9 @@
               startQueuedDispense();
             });
             button.addEventListener("pointerleave", () => {
+              endDispensePress();
+            });
+            button.addEventListener("pointercancel", () => {
               endDispensePress();
             });
           }
@@ -2803,12 +2819,43 @@
         });
       }
 
+      function emergencyStop() {
+        cancelDispensing();
+        clearInterval(state.timers.hold);
+        clearTimeout(state.timers.holdDelay);
+        clearTimeout(state.timers.unlock);
+        state.lockBlinkArmed = false;
+        state.lockBlinkPointerId = null;
+      }
+
       function init() {
         updateLCD();
         setEco(false);
         setLock(true);
         setupButtonHandlers();
         setupUserButtons();
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            emergencyStop();
+          }
+        });
+
+        window.addEventListener("blur", () => {
+          emergencyStop();
+        });
+
+        document.addEventListener("pointerup", () => {
+          if (state.isDispensing && state.dispenseMode === "hold") {
+            endDispensePress();
+          }
+          clearInterval(state.timers.hold);
+          clearTimeout(state.timers.holdDelay);
+        });
+
+        document.addEventListener("pointercancel", () => {
+          emergencyStop();
+        });
       }
 
       init();
